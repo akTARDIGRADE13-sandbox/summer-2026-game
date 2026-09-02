@@ -1,5 +1,6 @@
 import p5 from "p5";
-import "./style.css";
+import "../styles/common.css";
+import "../styles/game.css";
 
 new p5((p) => {
   p.setup = () => {
