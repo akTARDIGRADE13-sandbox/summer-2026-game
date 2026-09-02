@@ -62,4 +62,15 @@ export class Enemy {
     p.fill(220, 60, 60);
     p.circle(this.x, this.y, ENEMY_RADIUS * 2);
   }
+
+  isOffscreen(): boolean {
+    const margin = ENEMY_RADIUS * 2;
+
+    return (
+      this.x < -margin ||
+      this.x > CANVAS_WIDTH + margin ||
+      this.y < -margin ||
+      this.y > CANVAS_HEIGHT + margin
+    );
+  }
 }
