@@ -20,7 +20,17 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
+
           <a class="active" href="./">3. プロジェクトを作る</a>
+
+          <div class="docs-subnav">
+            <a href="#create-project">3.1 Viteでプロジェクトを作る</a>
+            <a href="#install">3.2 パッケージをインストールする</a>
+            <a href="#dev-server">3.3 開発サーバを起動する</a>
+            <a href="#structure">3.4 ファイル構成を見る</a>
+            <a href="#p5">3.5 p5.jsを追加する</a>
+          </div>
+
           <a href="../web/">4. Webページを編集する</a>
           <a href="../p5js/">5. p5.jsを使う</a>
           <a href="../sample-game/">6. サンプルゲームを読む</a>
@@ -33,7 +43,212 @@
       <main class="docs-content">
         <h1>3. プロジェクトを作る</h1>
 
-        <p>TODO</p>
+        <p>
+          ここでは、Viteを使ってTypeScriptのWebプロジェクトを作成し、
+          ブラウザで動作を確認します。
+          最後に、ゲーム制作で使用するp5.jsを追加します。
+        </p>
+
+        <section id="create-project">
+          <h2>3.1 Viteでプロジェクトを作る</h2>
+
+          <p>
+            <strong>Vite</strong>は、
+            Webアプリケーションの開発やビルドを行うためのツールです。
+            今回はViteを使ってTypeScriptプロジェクトを作成します。
+          </p>
+
+          <p>
+            まず、プロジェクトを置きたいディレクトリへ移動します。
+            例えば、前の章で作成した
+            <code>~/projects</code> を使用する場合は次のようにします。
+          </p>
+
+          <pre><code>cd ~/projects</code></pre>
+
+          <p>次に、ゲーム用のディレクトリを作成して移動します。</p>
+
+          <pre><code>mkdir my-game
+cd my-game</code></pre>
+
+          <p>ディレクトリ内で、次のコマンドを実行します。</p>
+
+          <pre><code>npm create vite@latest .</code></pre>
+
+          <p>
+            <code>.</code> は現在のディレクトリを表します。
+            そのため、このコマンドでは現在のディレクトリに
+            Viteプロジェクトを作成しています。
+          </p>
+
+          <p>いくつか選択肢が表示されるので、今回は次のように選択します。</p>
+
+          <ul>
+            <li><strong>Framework:</strong> Vanilla</li>
+            <li><strong>Variant:</strong> TypeScript</li>
+          </ul>
+
+          <aside class="note">
+            <strong>Vanillaとは</strong>
+            <p>
+              ReactやVueなどのフレームワークを使わず、
+              HTML、CSS、TypeScriptを基本として開発する構成です。
+              今回はWebページの構造を分かりやすくするため、
+              Vanillaを使用します。
+            </p>
+          </aside>
+        </section>
+
+        <section id="install">
+          <h2>3.2 パッケージをインストールする</h2>
+
+          <p>
+            プロジェクトを作成したら、必要なパッケージをインストールします。
+          </p>
+
+          <pre><code>npm install</code></pre>
+
+          <p>
+            このコマンドを実行すると、
+            <code>package.json</code> に記載されているパッケージが
+            <code>node_modules</code> にインストールされます。
+          </p>
+
+          <p>
+            ここでは、パッケージを
+            「プロジェクトで利用するライブラリや開発ツールをまとめたもの」
+            くらいに考えておけば十分です。
+          </p>
+
+          <aside class="note">
+            <strong><code>node_modules</code>について</strong>
+            <p>
+              <code>node_modules</code
+              >にはインストールされたパッケージが保存されます。
+              多数のファイルが含まれますが、基本的に中身を直接編集する必要はありません。
+            </p>
+          </aside>
+        </section>
+
+        <section id="dev-server">
+          <h2>3.3 開発サーバを起動する</h2>
+
+          <p>プロジェクトが作成できたら、開発サーバを起動します。</p>
+
+          <pre><code>npm run dev</code></pre>
+
+          <p>ターミナルに、次のようなURLが表示されます。</p>
+
+          <pre><code>http://localhost:5173/</code></pre>
+
+          <p>URLをブラウザで開き、Viteの初期ページが表示されれば成功です。</p>
+
+          <p>
+            ファイルを編集して保存すると、
+            多くの場合ブラウザ側にも変更がすぐ反映されます。
+            開発中は基本的に、この開発サーバを起動したまま作業します。
+          </p>
+
+          <p>
+            開発サーバを終了するときは、 起動しているターミナルで
+            <code>Ctrl + C</code> を押します。
+          </p>
+        </section>
+
+        <section id="structure">
+          <h2>3.4 ファイル構成を見る</h2>
+
+          <p>
+            Viteで作成した直後のプロジェクトには、
+            いくつかのファイルやディレクトリがあります。
+          </p>
+
+          <pre><code>my-game/
+├── public/
+├── src/
+├── index.html
+├── package.json
+├── package-lock.json
+└── tsconfig.json</code></pre>
+
+          <p>
+            今の段階では、それぞれの細かい内容を覚える必要はありません。
+            主に次のファイルを編集していきます。
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ファイル・ディレクトリ</th>
+                <th>役割</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>index.html</code></td>
+                <td>Webページの基本的な構造を書く</td>
+              </tr>
+
+              <tr>
+                <td><code>src/</code></td>
+                <td>TypeScriptやCSSなどのソースコードを置く</td>
+              </tr>
+
+              <tr>
+                <td><code>public/</code></td>
+                <td>画像など、そのまま公開したいファイルを置く</td>
+              </tr>
+
+              <tr>
+                <td><code>package.json</code></td>
+                <td>
+                  使用するパッケージや
+                  <code>npm run dev</code> などのコマンドを定義する
+                </td>
+              </tr>
+
+              <tr>
+                <td><code>package-lock.json</code></td>
+                <td>
+                  インストールするパッケージのバージョンなどをnpmが記録する
+                </td>
+              </tr>
+
+              <tr>
+                <td><code>tsconfig.json</code></td>
+                <td>TypeScriptの設定を書く</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            このほかに <code>node_modules/</code> も作成されていますが、
+            基本的に自分で編集することはありません。
+          </p>
+        </section>
+
+        <section id="p5">
+          <h2>3.5 p5.jsを追加する</h2>
+
+          <p>
+            最後に、ゲーム制作で使用する
+            <strong>p5.js</strong> をプロジェクトへ追加します。
+          </p>
+
+          <pre><code>npm install p5</code></pre>
+
+          <p>これで、TypeScriptのコードからp5.jsを利用できるようになります。</p>
+
+          <p>
+            <code>package.json</code>を見ると、
+            p5.jsがプロジェクトの依存パッケージとして追加されていることを確認できます。
+          </p>
+
+          <p>
+            実際にp5.jsを使ってCanvasへ描画する方法は、 次の章以降で扱います。
+          </p>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
           <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
