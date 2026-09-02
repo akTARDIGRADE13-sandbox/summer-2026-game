@@ -1,0 +1,28 @@
+.docs-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 48px;
+
+  padding: 32px;
+}
+
+.docs-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  position: sticky;
+  top: 32px;
+}
+
+.docs-content {
+  min-width: 0;
+  padding: 0;
+}
+
+.docs-content section {
+  margin-bottom: 64px;
+}

@@ -20,7 +20,7 @@ nav {
   gap: 24px;
 }
 
-main {
+.page-container {
   max-width: 960px;
   margin: 0 auto;
   padding: 32px;
