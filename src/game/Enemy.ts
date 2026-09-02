@@ -5,7 +5,9 @@ import {
   CANVAS_WIDTH,
   ENEMY_RADIUS,
   ENEMY_SPEED,
+  PLAYER_RADIUS,
 } from "./constants";
+import { Player } from "./Player";
 
 export class Enemy {
   x: number;
@@ -18,22 +20,22 @@ export class Enemy {
     const edge = Math.floor(p.random(4));
 
     switch (edge) {
-      case 0: // top
+      case 0:
         this.x = p.random(CANVAS_WIDTH);
         this.y = -ENEMY_RADIUS;
         break;
 
-      case 1: // right
+      case 1:
         this.x = CANVAS_WIDTH + ENEMY_RADIUS;
         this.y = p.random(CANVAS_HEIGHT);
         break;
 
-      case 2: // bottom
+      case 2:
         this.x = p.random(CANVAS_WIDTH);
         this.y = CANVAS_HEIGHT + ENEMY_RADIUS;
         break;
 
-      default: // left
+      default:
         this.x = -ENEMY_RADIUS;
         this.y = p.random(CANVAS_HEIGHT);
         break;
@@ -61,6 +63,12 @@ export class Enemy {
   draw(p: p5): void {
     p.fill(220, 60, 60);
     p.circle(this.x, this.y, ENEMY_RADIUS * 2);
+  }
+
+  collidesWith(p: p5, player: Player): boolean {
+    const distance = p.dist(this.x, this.y, player.x, player.y);
+
+    return distance < ENEMY_RADIUS + PLAYER_RADIUS;
   }
 
   isOffscreen(): boolean {
