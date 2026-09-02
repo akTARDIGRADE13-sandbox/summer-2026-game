@@ -121,8 +121,10 @@ code {
   font-size: 0.9em;
 }
 
+/* Inline code */
+
 :not(pre) > code {
-  padding: 0.15em 0.35em;
+  padding: 0.15em 0.4em;
 
   border: 1px solid #d8dee4;
   border-radius: 4px;
@@ -130,22 +132,33 @@ code {
   background: #f6f8fa;
 }
 
+/* Code block */
+
 pre {
   margin: 20px 0;
   padding: 16px 20px;
 
   overflow-x: auto;
 
-  border: 1px solid #d8dee4;
+  border: 1px solid #d0d7de;
   border-radius: 6px;
 
   background: #f6f8fa;
+
+  line-height: 1.45;
+  tab-size: 2;
 }
 
 pre code {
   padding: 0;
   border: 0;
+
   background: transparent;
+
+  font-size: 0.9rem;
+  line-height: inherit;
+
+  white-space: pre;
 }
 
 /* Tables */

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>プロジェクトを作る | Summer 2026 Game</title>
+    <title>Webページを編集する | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -20,8 +20,19 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
-          <a class="active" href="./">3. プロジェクトを作る</a>
-          <a href="../web/">4. Webページを編集する</a>
+          <a href="../project/">3. プロジェクトを作る</a>
+
+          <a class="active" href="./">4. Webページを編集する</a>
+
+          <div class="docs-subnav">
+            <a href="#overview">4.1 Webページを構成するもの</a>
+            <a href="#html">4.2 HTMLを見る</a>
+            <a href="#css">4.3 CSSを見る</a>
+            <a href="#typescript">4.4 TypeScriptを見る</a>
+            <a href="#cleanup">4.5 Viteの初期ページを整理する</a>
+            <a href="#references">4.6 参考資料</a>
+          </div>
+
           <a href="../p5js/">5. p5.jsを使う</a>
           <a href="../sample-game/">6. サンプルゲームを読む</a>
           <a href="../git/">7. Git / GitHubを使う</a>
@@ -31,14 +42,318 @@
       </aside>
 
       <main class="docs-content">
-        <h1>3. プロジェクトを作る</h1>
+        <h1>4. Webページを編集する</h1>
 
-        <p>TODO</p>
+        <p>
+          Viteで作成したプロジェクトには、
+          Webページを作るためのHTML、CSS、TypeScriptが含まれています。
+        </p>
+
+        <p>
+          このチュートリアルでは、それぞれの言語の文法そのものは
+          詳しく扱いません。 ここでは、それぞれが何を担当しているのかと、
+          プロジェクト内でどのようにつながっているのかを確認します。
+        </p>
+
+        <section id="overview">
+          <h2>4.1 Webページを構成するもの</h2>
+
+          <p>今回は、主に次の3つを使ってWebページを作ります。</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>言語</th>
+                <th>主な役割</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>HTML</td>
+                <td>ページの構造や内容を記述する</td>
+              </tr>
+
+              <tr>
+                <td>CSS</td>
+                <td>色、余白、配置などの見た目を指定する</td>
+              </tr>
+
+              <tr>
+                <td>TypeScript</td>
+                <td>ユーザー操作への反応など、ページの処理を記述する</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            大まかには、
+            <strong>HTMLが構造、CSSが見た目、TypeScriptが処理</strong>
+            を担当すると考えておけば十分です。
+          </p>
+
+          <aside class="note">
+            <strong>TypeScriptとJavaScript</strong>
+
+            <p>
+              TypeScriptはJavaScriptを拡張した言語です。
+              ブラウザが最終的に実行するのはJavaScriptなので、
+              ViteがTypeScriptをブラウザで利用できる形に変換します。
+            </p>
+          </aside>
+        </section>
+
+        <section id="html">
+          <h2>4.2 HTMLを見る</h2>
+
+          <p>
+            プロジェクトのルートにある
+            <code>index.html</code> がWebページの入口になります。
+          </p>
+
+          <p>例えば、最小限のページは次のように書けます。</p>
+
+          <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ja"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;My Game&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;main&gt;
+      &lt;h1&gt;My Game&lt;/h1&gt;
+      &lt;p&gt;ゲームを作ってみよう！&lt;/p&gt;
+    &lt;/main&gt;
+
+    &lt;script type="module" src="/src/main.ts"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+          <p>
+            <code>&lt;h1&gt;</code> や <code>&lt;p&gt;</code> のようなものを
+            <strong>HTML要素</strong>と呼びます。
+          </p>
+
+          <p>
+            今回すべてのHTML要素を覚える必要はありません。
+            必要なものが出てきたときに調べながら使えば十分です。
+          </p>
+
+          <p>
+            最後の
+            <code>&lt;script&gt;</code> では、
+            このページから読み込むTypeScriptファイルを指定しています。
+          </p>
+
+          <pre><code>&lt;script type="module" src="/src/main.ts"&gt;&lt;/script&gt;</code></pre>
+        </section>
+
+        <section id="css">
+          <h2>4.3 CSSを見る</h2>
+
+          <p>CSSでは、HTMLで作った要素の見た目を指定します。</p>
+
+          <p>例えば、次のCSSを考えます。</p>
+
+          <pre><code>body {
+  margin: 0;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px;
+}</code></pre>
+
+          <p>
+            この例では、ページ全体の余白を調整し、
+            <code>&lt;main&gt;</code> の幅や配置を設定しています。
+          </p>
+
+          <p>CSSはTypeScriptから読み込むこともできます。</p>
+
+          <pre><code>import "./style.css";</code></pre>
+
+          <p>ViteがCSSを処理し、ブラウザから利用できる形にしてくれます。</p>
+
+          <p>
+            このサイト自体も、基本的にはHTMLとCSSを使ってレイアウトしています。
+            Webページのデザインを変更したい場合は、
+            このサイトのHTMLやCSSも参考にしてみてください。
+          </p>
+        </section>
+
+        <section id="typescript">
+          <h2>4.4 TypeScriptを見る</h2>
+
+          <p>TypeScriptでは、ページ上で行いたい処理を書きます。</p>
+
+          <p>例えば、HTML内に次のボタンがあるとします。</p>
+
+          <pre><code>&lt;button id="hello-button"&gt;Click&lt;/button&gt;</code></pre>
+
+          <p>
+            TypeScriptからこのボタンを取得し、
+            押されたときの処理を書くことができます。
+          </p>
+
+          <pre><code>const button = document.querySelector("#hello-button");
+
+button?.addEventListener("click", () =&gt; {
+  console.log("Hello!");
+});</code></pre>
+
+          <p>
+            このように、TypeScriptを使うことで
+            ユーザーの入力に応じてページを動かすことができます。
+          </p>
+
+          <p>
+            p5.jsを利用するゲームもTypeScriptから動かします。
+            p5.jsについては次の章で扱います。
+          </p>
+
+          <aside class="note">
+            <strong>文法を全部理解してから進む必要はありません</strong>
+
+            <p>
+              <code>const</code>、 <code>function</code>、
+              配列、クラス、型など、 TypeScriptにはさまざまな文法があります。
+              分からない構文が出てきたときに、その都度調べながら進めて構いません。
+            </p>
+          </aside>
+        </section>
+
+        <section id="cleanup">
+          <h2>4.5 Viteの初期ページを整理する</h2>
+
+          <p>
+            Viteが最初に生成するプロジェクトには、
+            動作確認用のサンプルコードや画像が含まれています。
+          </p>
+
+          <p>
+            今回はゲームを作るので、
+            これらを削除して最小限の状態にしておきます。
+          </p>
+
+          <p><code>index.html</code> は、例えば次のようにできます。</p>
+
+          <pre><code>&lt;!doctype html&gt;
+&lt;html lang="ja"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;My Game&lt;/title&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;main&gt;
+      &lt;h1&gt;My Game&lt;/h1&gt;
+      &lt;div id="game-container"&gt;&lt;/div&gt;
+    &lt;/main&gt;
+
+    &lt;script type="module" src="/src/main.ts"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+          <p>
+            <code>src/main.ts</code> も、
+            Viteが生成したサンプルコードを削除して、
+            ひとまずCSSだけ読み込む状態にできます。
+          </p>
+
+          <pre><code>import "./style.css";</code></pre>
+
+          <p>
+            <code>src/style.css</code> は、 例えば次の程度から始められます。
+          </p>
+
+          <pre><code>body {
+  margin: 0;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+#game-container {
+  display: flex;
+  justify-content: center;
+}</code></pre>
+
+          <p>
+            <code>#game-container</code> は、
+            次の章でp5.jsのCanvasを配置するために使用します。
+          </p>
+
+          <p>編集できたら、開発サーバを起動して確認します。</p>
+
+          <pre><code>npm run dev</code></pre>
+
+          <p>ブラウザに <strong>My Game</strong> と表示されればOKです。</p>
+        </section>
+
+        <section id="references">
+          <h2>4.6 参考資料</h2>
+
+          <p>
+            HTML、CSS、JavaScript、TypeScriptの文法については、
+            このチュートリアルでは詳しく扱いません。
+            必要に応じて次の資料を参照してください。
+          </p>
+
+          <ul>
+            <li>
+              <a
+                href="https://developer.mozilla.org/ja/docs/Learn_web_development"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MDN - ウェブ開発を学ぶ
+              </a>
+              ：HTML、CSS、JavaScriptなどの解説
+            </li>
+
+            <li>
+              <a
+                href="https://jsprimer.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                JavaScript Primer
+              </a>
+              ：JavaScriptを日本語で体系的に学べる資料
+            </li>
+
+            <li>
+              <a
+                href="https://typescriptbook.jp/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                サバイバルTypeScript
+              </a>
+              ：TypeScriptを日本語で学べる資料
+            </li>
+          </ul>
+
+          <p>
+            Webページのデザインをより凝りたい場合は、
+            CSSを自分で書くだけでなく、
+            BootstrapなどのCSSフレームワークを利用する方法もあります。
+            これについては発展の章で紹介します。
+          </p>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
-          <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
+          <a href="../project/"> ← 前へ：3. プロジェクトを作る </a>
 
-          <a class="next" href="../web/"> 次へ：4. Webページを編集する → </a>
+          <a class="next" href="../p5js/"> 次へ：5. p5.jsを使う → </a>
         </nav>
       </main>
     </div>
