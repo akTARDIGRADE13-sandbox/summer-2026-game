@@ -8,6 +8,8 @@ import { Player } from "./Player";
 type GameState = "title" | "playing" | "gameOver";
 
 export class Game {
+  private p: p5;
+
   private player: Player;
   private item: Item;
   private enemies: Enemy[] = [];
@@ -16,7 +18,9 @@ export class Game {
   private score = 0;
   private state: GameState = "title";
 
-  constructor(private p: p5) {
+  constructor(p: p5) {
+    this.p = p;
+
     this.player = new Player();
     this.item = new Item(p);
   }
