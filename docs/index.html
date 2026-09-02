@@ -7,8 +7,8 @@
   </head>
 
   <body>
-    <header>
-      <nav>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Main navigation">
         <a href="../">Home</a>
         <a href="../game/">Play</a>
         <a href="./">Docs</a>
@@ -17,62 +17,54 @@
 
     <div class="docs-layout">
       <aside class="docs-sidebar">
-        <nav>
-          <a href="#introduction">はじめに</a>
-          <a href="#environment">開発環境</a>
-          <a href="#project">プロジェクトの作成</a>
-          <a href="#web">Web開発</a>
-          <a href="#p5js">p5.js</a>
-          <a href="#game">サンプルゲーム</a>
-          <a href="#git">Git / GitHub</a>
-          <a href="#deploy">GitHub Pages</a>
-          <a href="#advanced">発展</a>
-          <a href="#references">参考資料</a>
+        <nav class="docs-nav" aria-label="Documentation navigation">
+          <a class="active" href="./">1. はじめに</a>
+          <a href="./environment/">2. 開発環境を準備する</a>
+          <a href="./project/">3. プロジェクトを作る</a>
+          <a href="./web/">4. Webページを編集する</a>
+          <a href="./p5js/">5. p5.jsを使う</a>
+          <a href="./sample-game/">6. サンプルゲームを読む</a>
+          <a href="./git/">7. Git / GitHubを使う</a>
+          <a href="./deploy/">8. GitHub Pagesで公開する</a>
+          <a href="./advanced/">9. 発展・参考資料</a>
         </nav>
       </aside>
 
       <main class="docs-content">
         <h1>Documentation</h1>
 
-        <section id="introduction">
-          <h2>はじめに</h2>
+        <section>
+          <h2>1. はじめに</h2>
+
+          <p>
+            このサイトでは、p5.jsとTypeScriptを使ってWebゲームを作成し、 GitHub
+            Pagesで公開するまでの流れを紹介します。
+          </p>
+
+          <p>
+            HTML、CSS、TypeScriptなどの文法そのものは詳しく扱いません。
+            必要に応じて外部のドキュメントや学習資料を参照してください。
+          </p>
+
+          <h3>1.1 使用する技術</h3>
+
+          <ul>
+            <li>WSL</li>
+            <li>Visual Studio Code</li>
+            <li>Node.js / npm</li>
+            <li>Vite</li>
+            <li>TypeScript</li>
+            <li>p5.js</li>
+            <li>Git / GitHub</li>
+            <li>GitHub Pages</li>
+          </ul>
         </section>
 
-        <section id="environment">
-          <h2>開発環境</h2>
-        </section>
-
-        <section id="project">
-          <h2>プロジェクトの作成</h2>
-        </section>
-
-        <section id="web">
-          <h2>Web開発</h2>
-        </section>
-
-        <section id="p5js">
-          <h2>p5.js</h2>
-        </section>
-
-        <section id="game">
-          <h2>サンプルゲーム</h2>
-        </section>
-
-        <section id="git">
-          <h2>Git / GitHub</h2>
-        </section>
-
-        <section id="deploy">
-          <h2>GitHub Pages</h2>
-        </section>
-
-        <section id="advanced">
-          <h2>発展</h2>
-        </section>
-
-        <section id="references">
-          <h2>参考資料</h2>
-        </section>
+        <nav class="docs-page-nav" aria-label="Page navigation">
+          <a class="next" href="./environment/">
+            次へ：2. 開発環境を準備する →
+          </a>
+        </nav>
       </main>
     </div>
 

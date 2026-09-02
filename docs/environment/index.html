@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>開発環境を準備する | Summer 2026 Game</title>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../../">Home</a>
+        <a href="../../game/">Play</a>
+        <a href="../">Docs</a>
+      </nav>
+    </header>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <nav class="docs-nav" aria-label="Documentation navigation">
+          <a href="../">1. はじめに</a>
+
+          <a class="active" href="./">2. 開発環境を準備する</a>
+
+          <div class="docs-subnav">
+            <a href="#wsl">2.1 WSL</a>
+            <a href="#terminal">2.2 ターミナル</a>
+            <a href="#node">2.3 Node.js</a>
+            <a href="#vscode">2.4 VS Code</a>
+          </div>
+
+          <a href="../project/">3. プロジェクトを作る</a>
+          <a href="../web/">4. Webページを編集する</a>
+          <a href="../p5js/">5. p5.jsを使う</a>
+          <a href="../sample-game/">6. サンプルゲームを読む</a>
+          <a href="../git/">7. Git / GitHubを使う</a>
+          <a href="../deploy/">8. GitHub Pagesで公開する</a>
+          <a href="../advanced/">9. 発展・参考資料</a>
+        </nav>
+      </aside>
+
+      <main class="docs-content">
+        <h1>2. 開発環境を準備する</h1>
+
+        <p>
+          ここでは、ゲーム開発を始めるために必要な開発環境を準備します。
+          Windows上にWSLを導入し、Node.jsやVS Codeを利用できるようにします。
+        </p>
+
+        <section id="wsl">
+          <h2>2.1 WSLをセットアップする</h2>
+
+          <p>
+            この企画では、Windows上の開発環境として
+            <strong>WSL（Windows Subsystem for Linux）</strong>
+            を使用します。
+            WSLを使うと、Windows上でUbuntuなどのLinux環境を利用できます。
+          </p>
+
+          <h3>WSLをインストールする</h3>
+
+          <p>
+            PowerShellを<strong>管理者として</strong>起動し、
+            次のコマンドを実行します。
+          </p>
+
+          <pre><code>wsl --install</code></pre>
+
+          <p>
+            インストールが完了したら、必要に応じてPCを再起動してください。
+            Ubuntuを初めて起動すると、Linux上で使用するユーザー名と
+            パスワードの設定を求められます。
+          </p>
+
+          <h3><code>wsl --install</code> がうまく動かない場合</h3>
+
+          <p>
+            WSL自体が古い場合があります。
+            次のコマンドでWSLを更新してから、もう一度試してください。
+          </p>
+
+          <pre><code>wsl --update</code></pre>
+
+          <p>
+            インストールできるLinuxディストリビューションの一覧は、
+            次のコマンドで確認できます。
+          </p>
+
+          <pre><code>wsl --list --online</code></pre>
+
+          <p>
+            ディストリビューションを指定してインストールする場合は、
+            次のようにします。
+          </p>
+
+          <pre><code>wsl --install -d &lt;Distribution Name&gt;</code></pre>
+
+          <p>例えばUbuntu 24.04を指定する場合は次のようになります。</p>
+
+          <pre><code>wsl --install -d Ubuntu-24.04</code></pre>
+
+          <p>
+            これらの方法でもうまくいかない場合は、
+            Microsoft公式のWSLドキュメントを参照してください。
+          </p>
+
+          <p>
+            <a
+              href="https://learn.microsoft.com/ja-jp/windows/wsl/install"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WSLのインストール | Microsoft Learn
+            </a>
+          </p>
+        </section>
+
+        <section id="terminal">
+          <h2>2.2 ターミナルを使う</h2>
+
+          <p>
+            WSLでは、ターミナルからコマンドを入力して、
+            ディレクトリの移動やプログラムの実行などを行います。
+            最初から多くのコマンドを覚える必要はありません。
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>コマンド</th>
+                <th>役割</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>pwd</code></td>
+                <td>現在いるディレクトリを表示する</td>
+              </tr>
+
+              <tr>
+                <td><code>ls</code></td>
+                <td>ファイルやディレクトリを一覧表示する</td>
+              </tr>
+
+              <tr>
+                <td><code>cd</code></td>
+                <td>ディレクトリを移動する</td>
+              </tr>
+
+              <tr>
+                <td><code>mkdir</code></td>
+                <td>ディレクトリを作成する</td>
+              </tr>
+
+              <tr>
+                <td><code>cp</code></td>
+                <td>ファイルやディレクトリをコピーする</td>
+              </tr>
+
+              <tr>
+                <td><code>mv</code></td>
+                <td>ファイルを移動する・名前を変更する</td>
+              </tr>
+
+              <tr>
+                <td><code>rm</code></td>
+                <td>ファイルを削除する</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>また、パスでは次の表記をよく使用します。</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>表記</th>
+                <th>意味</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>~</code></td>
+                <td>自分のホームディレクトリ</td>
+              </tr>
+
+              <tr>
+                <td><code>.</code></td>
+                <td>現在のディレクトリ</td>
+              </tr>
+
+              <tr>
+                <td><code>..</code></td>
+                <td>1つ上のディレクトリ</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>作業用ディレクトリを作る</h3>
+
+          <p>
+            プロジェクトはWSL側のホームディレクトリ以下に
+            置くことをおすすめします。
+          </p>
+
+          <pre><code>mkdir -p ~/projects
+cd ~/projects</code></pre>
+
+          <p>現在いる場所は次のコマンドで確認できます。</p>
+
+          <pre><code>pwd</code></pre>
+
+          <h3>ターミナルのカスタマイズ</h3>
+
+          <p>
+            このチュートリアルでは標準の環境を使用しますが、
+            ターミナルの見た目や操作方法は自由にカスタマイズできます。
+            興味があれば、zsh、fish、Starshipなどについて調べてみてください。
+          </p>
+        </section>
+
+        <section id="node">
+          <h2>2.3 Node.jsをインストールする</h2>
+
+          <p>
+            <strong>Node.js</strong>は、
+            JavaScriptをブラウザ以外の環境でも実行できるようにする実行環境です。
+          </p>
+
+          <p>
+            Node.jsでは<strong>npm</strong>というパッケージマネージャーを利用できます。
+            今回使用するViteやp5.jsなどもnpmを使って導入します。
+          </p>
+
+          <p>
+            Node.jsのインストールには
+            <strong>nvm（Node Version Manager）</strong>
+            を使用します。
+          </p>
+
+          <h3>nvmをインストールする</h3>
+
+          <p>nvmのインストール方法は、公式リポジトリを参照してください。</p>
+
+          <p>
+            <a
+              href="https://github.com/nvm-sh/nvm#installing-and-updating"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              nvm - Installing and Updating
+            </a>
+          </p>
+
+          <p>インストール後、nvmが利用できることを確認します。</p>
+
+          <pre><code>command -v nvm</code></pre>
+
+          <p><code>nvm</code> と表示されればOKです。</p>
+
+          <h3>Node.jsをインストールする</h3>
+
+          <p>Node.jsのLTS版をインストールします。</p>
+
+          <pre><code>nvm install --lts</code></pre>
+
+          <p>インストール後、それぞれのバージョンを確認します。</p>
+
+          <pre><code>node --version
+npm --version</code></pre>
+
+          <p>両方ともバージョン番号が表示されれば準備は完了です。</p>
+        </section>
+
+        <section id="vscode">
+          <h2>2.4 VS Codeを準備する</h2>
+
+          <p>
+            このチュートリアルでは、コードを書くためのエディタとして
+            <strong>Visual Studio Code（VS Code）</strong>
+            を使用します。
+          </p>
+
+          <p>
+            VS CodeはWindows側にインストールします。 また、VS
+            CodeからWSL上のファイルを扱うために
+            <strong>WSL</strong>拡張機能をインストールしてください。
+          </p>
+
+          <p>
+            <a
+              href="https://code.visualstudio.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visual Studio Code
+            </a>
+          </p>
+
+          <h3>WSLからVS Codeを起動する</h3>
+
+          <p>
+            WSLのターミナルで、開きたいディレクトリへ移動してから
+            次のコマンドを実行します。
+          </p>
+
+          <pre><code>code .</code></pre>
+
+          <p>
+            <code>.</code> は「現在のディレクトリ」を意味します。 つまり、<code
+              >code .</code
+            >
+            は 「現在のディレクトリをVS Codeで開く」という意味です。
+          </p>
+        </section>
+
+        <nav class="docs-page-nav" aria-label="Page navigation">
+          <a href="../">← 前へ：1. はじめに</a>
+
+          <a class="next" href="../project/"> 次へ：3. プロジェクトを作る → </a>
+        </nav>
+      </main>
+    </div>
+
+    <script type="module" src="/src/docs.ts"></script>
+  </body>
+</html>
