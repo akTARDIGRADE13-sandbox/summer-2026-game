@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/docs.css" />
-    <title>プロジェクトを作る | Summer 2026 Game</title>
+    <title>サンプルゲームを読む | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -22,10 +22,25 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
-          <a class="active" href="./">3. プロジェクトを作る</a>
+          <a href="../project/">3. プロジェクトを作る</a>
           <a href="../web/">4. Webページを編集する</a>
           <a href="../p5js/">5. p5.jsを使う</a>
-          <a href="../sample-game/">6. サンプルゲームを読む</a>
+
+          <a class="active" href="./">6. サンプルゲームを読む</a>
+
+          <div class="docs-subnav">
+            <a href="#overview">6.1 ゲーム全体の構成</a>
+            <a href="#main">6.2 main.ts</a>
+            <a href="#game">6.3 Game.ts</a>
+            <a href="#player">6.4 Player.ts</a>
+            <a href="#enemy">6.5 Enemy.ts</a>
+            <a href="#item">6.6 Item.ts</a>
+            <a href="#constants">6.7 constants.ts</a>
+            <a href="#input">6.8 入力処理</a>
+            <a href="#collision">6.9 衝突判定</a>
+            <a href="#modify">6.10 改造してみる</a>
+          </div>
+
           <a href="../git/">7. Git / GitHubを使う</a>
           <a href="../deploy/">8. GitHub Pagesで公開する</a>
           <a href="../advanced/">9. 発展・参考資料</a>
@@ -33,18 +48,599 @@
       </aside>
 
       <main class="docs-content">
-        <h1>3. プロジェクトを作る</h1>
+        <h1>6. サンプルゲームを読む</h1>
 
-        <p>TODO</p>
+        <p>
+          このサイトには、p5.jsとTypeScriptを使って作成した
+          シンプルなサンプルゲームが含まれています。
+        </p>
+
+        <p>
+          プレイヤーを操作して敵を避けながらアイテムを集め、
+          スコアを増やしていくゲームです。
+          まず実際にプレイしてからコードを読むと、
+          それぞれの処理が何をしているのか理解しやすくなります。
+        </p>
+
+        <p>
+          <a href="../../game/">サンプルゲームをプレイする</a>
+        </p>
+
+        <aside class="note">
+          <strong>この章について</strong>
+
+          <p>
+            この章ではTypeScriptの文法そのものは詳しく説明しません。
+            それぞれのファイルや処理が
+            「ゲームの中で何を担当しているか」を中心に見ていきます。
+          </p>
+        </aside>
+
+        <section id="overview">
+          <h2>6.1 ゲーム全体の構成</h2>
+
+          <p>
+            ゲームに関するソースコードは
+            <code>src/game/</code> にまとめています。
+          </p>
+
+          <pre><code>src/game/
+├── main.ts
+├── Game.ts
+├── Player.ts
+├── Enemy.ts
+├── Item.ts
+└── constants.ts</code></pre>
+
+          <p>それぞれの役割は次のようになっています。</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ファイル</th>
+                <th>役割</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>main.ts</code></td>
+                <td>p5.jsを起動し、ゲーム全体と接続する</td>
+              </tr>
+
+              <tr>
+                <td><code>Game.ts</code></td>
+                <td>ゲーム全体の状態・更新・描画を管理する</td>
+              </tr>
+
+              <tr>
+                <td><code>Player.ts</code></td>
+                <td>プレイヤーの移動と描画を管理する</td>
+              </tr>
+
+              <tr>
+                <td><code>Enemy.ts</code></td>
+                <td>敵の生成・移動・衝突判定を管理する</td>
+              </tr>
+
+              <tr>
+                <td><code>Item.ts</code></td>
+                <td>アイテムの配置と取得判定を管理する</td>
+              </tr>
+
+              <tr>
+                <td><code>constants.ts</code></td>
+                <td>Canvasサイズや移動速度などの定数をまとめる</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>大まかな関係は次のようになっています。</p>
+
+          <pre><code>p5.js
+  │
+  ↓
+main.ts
+  │
+  ↓
+Game
+├── Player
+├── Enemy[]
+└── Item</code></pre>
+
+          <p>
+            <code>main.ts</code> にゲームの処理をすべて書くのではなく、
+            役割ごとにファイルを分けることで、 コードを追いやすくしています。
+          </p>
+        </section>
+
+        <section id="main">
+          <h2>6.2 <code>main.ts</code></h2>
+
+          <p><code>main.ts</code> は、 p5.jsとゲーム本体を接続する入口です。</p>
+
+          <p>主要な部分は次のようになっています。</p>
+
+          <pre><code>new p5((p) =&gt; {
+  let game: Game;
+
+  p.setup = () =&gt; {
+    const canvas = p.createCanvas(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+    );
+
+    canvas.parent("game-container");
+
+    game = new Game(p);
+  };
+
+  p.draw = () =&gt; {
+    game.update();
+    game.draw();
+  };
+
+  p.keyPressed = (event) =&gt; {
+    // キー入力をGameへ渡す
+  };
+});</code></pre>
+
+          <p>
+            <code>setup()</code> ではCanvasを作り、
+            <code>Game</code> を初期化しています。
+          </p>
+
+          <p>
+            <code>draw()</code> では毎フレーム、
+            ゲームの状態を更新してから画面を描画します。
+          </p>
+
+          <pre><code>game.update();
+game.draw();</code></pre>
+
+          <p>
+            このように、 p5.js固有の処理とゲーム本体の処理を分離しています。
+          </p>
+        </section>
+
+        <section id="game">
+          <h2>6.3 <code>Game.ts</code></h2>
+
+          <p><code>Game</code> はゲーム全体を管理するクラスです。</p>
+
+          <p>例えば、次のような情報を保持しています。</p>
+
+          <pre><code>private player: Player;
+private item: Item;
+private enemies: Enemy[] = [];
+
+private enemySpawnTimer = 0;
+private score = 0;
+private state: GameState = "title";</code></pre>
+
+          <p>
+            プレイヤー、アイテム、敵だけでなく、 スコアや現在のゲーム状態も
+            <code>Game</code> がまとめて管理しています。
+          </p>
+
+          <h3>ゲームの状態</h3>
+
+          <p>ゲームには3つの状態があります。</p>
+
+          <pre><code>type GameState = "title" | "playing" | "gameOver";</code></pre>
+
+          <table>
+            <thead>
+              <tr>
+                <th>状態</th>
+                <th>意味</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>title</code></td>
+                <td>ゲーム開始前</td>
+              </tr>
+
+              <tr>
+                <td><code>playing</code></td>
+                <td>ゲームをプレイしている</td>
+              </tr>
+
+              <tr>
+                <td><code>gameOver</code></td>
+                <td>敵に接触してゲームが終了している</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>状態は次のように変化します。</p>
+
+          <pre><code>title
+  │ Space
+  ↓
+playing
+  │ 敵に接触
+  ↓
+gameOver
+  │ R
+  ↓
+playing</code></pre>
+
+          <h3>更新と描画</h3>
+
+          <p>
+            <code>Game</code> でも、 処理を大きく <code>update()</code> と
+            <code>draw()</code> に分けています。
+          </p>
+
+          <pre><code>update(): void {
+  // プレイヤーを動かす
+  // アイテム取得を確認する
+  // 敵を生成する
+  // 敵を動かす
+  // 衝突を確認する
+}
+
+draw(): void {
+  // 背景を描く
+  // プレイヤーを描く
+  // 敵を描く
+  // アイテムを描く
+  // スコアなどを描く
+}</code></pre>
+
+          <p>
+            「ゲームの状態を変える処理」と
+            「現在の状態を画面へ描く処理」を分けておくと、
+            コードの役割が分かりやすくなります。
+          </p>
+        </section>
+
+        <section id="player">
+          <h2>6.4 <code>Player.ts</code></h2>
+
+          <p>
+            <code>Player</code> は、 プレイヤーの位置を保持し、
+            キー入力に応じて位置を更新します。
+          </p>
+
+          <p>例えば、移動方向を次のように求めています。</p>
+
+          <pre><code>let dx = 0;
+let dy = 0;
+
+if (p.keyIsDown(p.LEFT_ARROW) || p.keyIsDown(65)) {
+  dx -= 1;
+}
+
+if (p.keyIsDown(p.RIGHT_ARROW) || p.keyIsDown(68)) {
+  dx += 1;
+}
+
+if (p.keyIsDown(p.UP_ARROW) || p.keyIsDown(87)) {
+  dy -= 1;
+}
+
+if (p.keyIsDown(p.DOWN_ARROW) || p.keyIsDown(83)) {
+  dy += 1;
+}</code></pre>
+
+          <p>
+            ここで使用している
+            <code>65</code>、 <code>68</code>、 <code>87</code>、
+            <code>83</code>
+            は、それぞれA、D、W、Sキーに対応します。
+          </p>
+
+          <h3>斜め移動を正規化する</h3>
+
+          <p>
+            例えば右と上を同時に入力すると、 移動方向は
+            <code>(1, -1)</code> になります。
+          </p>
+
+          <p>
+            このままでは斜め方向だけ移動速度が速くなってしまうため、
+            ベクトルの長さを1に揃えています。
+          </p>
+
+          <pre><code>const length = Math.hypot(dx, dy);
+
+if (length &gt; 0) {
+  dx /= length;
+  dy /= length;
+}</code></pre>
+
+          <p>その後、移動速度と経過時間を使って位置を更新します。</p>
+
+          <pre><code>const dt = p.deltaTime / 1000;
+
+this.x += dx * PLAYER_SPEED * dt;
+this.y += dy * PLAYER_SPEED * dt;</code></pre>
+
+          <p>
+            最後に <code>constrain()</code> を使って、
+            プレイヤーがCanvasの外へ出ないようにしています。
+          </p>
+        </section>
+
+        <section id="enemy">
+          <h2>6.5 <code>Enemy.ts</code></h2>
+
+          <p>
+            敵はCanvasの外側から出現し、
+            出現した瞬間のプレイヤーの位置へ向かって直進します。
+          </p>
+
+          <h3>出現する場所を決める</h3>
+
+          <p>
+            <code>random()</code> を使って、
+            上・右・下・左のどの辺から出現するかをランダムに決めます。
+          </p>
+
+          <pre><code>const edge = Math.floor(p.random(4));
+
+switch (edge) {
+  case 0:
+    // top
+    break;
+
+  case 1:
+    // right
+    break;
+
+  case 2:
+    // bottom
+    break;
+
+  default:
+    // left
+    break;
+}</code></pre>
+
+          <h3>進行方向を決める</h3>
+
+          <p>敵の位置からプレイヤーの位置へ向かうベクトルを作ります。</p>
+
+          <pre><code>let dx = targetX - this.x;
+let dy = targetY - this.y;
+
+const length = Math.hypot(dx, dy);
+
+dx /= length;
+dy /= length;
+
+this.vx = dx * ENEMY_SPEED;
+this.vy = dy * ENEMY_SPEED;</code></pre>
+
+          <p>
+            この方向は敵を生成したときに一度だけ決まるため、
+            プレイヤーがその後移動しても敵は曲がりません。
+          </p>
+
+          <p>
+            一定時間ごとの敵生成は
+            <code>Game</code> 側で管理しています。
+          </p>
+        </section>
+
+        <section id="item">
+          <h2>6.6 <code>Item.ts</code></h2>
+
+          <p>アイテムはCanvas内のランダムな位置に配置されます。</p>
+
+          <pre><code>this.x = p.random(
+  ITEM_RADIUS,
+  CANVAS_WIDTH - ITEM_RADIUS,
+);
+
+this.y = p.random(
+  ITEM_RADIUS,
+  CANVAS_HEIGHT - ITEM_RADIUS,
+);</code></pre>
+
+          <p>
+            プレイヤーがアイテムに触れるとスコアを1増やし、
+            アイテムを別の場所へ再配置します。
+          </p>
+
+          <pre><code>if (this.item.collidesWith(this.p, this.player)) {
+  this.score += 1;
+  this.item.respawn(this.p);
+}</code></pre>
+
+          <p>
+            今回はサンプルを単純にするため、 アイテムは同時に1個だけ存在します。
+          </p>
+        </section>
+
+        <section id="constants">
+          <h2>6.7 <code>constants.ts</code></h2>
+
+          <p>
+            ゲームで使用する数値の一部は、
+            <code>constants.ts</code> にまとめています。
+          </p>
+
+          <pre><code>export const CANVAS_WIDTH = 640;
+export const CANVAS_HEIGHT = 480;
+
+export const PLAYER_RADIUS = 15;
+export const PLAYER_SPEED = 250;
+
+export const ENEMY_RADIUS = 15;
+export const ENEMY_SPEED = 120;
+
+export const ITEM_RADIUS = 10;
+export const ENEMY_SPAWN_INTERVAL = 1000;</code></pre>
+
+          <p>
+            例えばプレイヤーを速くしたければ、
+            <code>PLAYER_SPEED</code> を変更するだけで済みます。
+          </p>
+
+          <p>
+            ゲームの調整に使う値をまとめておくことで、
+            コードの中から数値を探して変更する必要がなくなります。
+          </p>
+        </section>
+
+        <section id="input">
+          <h2>6.8 入力処理</h2>
+
+          <p>このゲームでは、キー入力を2種類の方法で扱っています。</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>方法</th>
+                <th>用途</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>keyIsDown()</code></td>
+                <td>キーを押している間、連続して処理する</td>
+              </tr>
+
+              <tr>
+                <td><code>keyPressed()</code></td>
+                <td>キーが押された瞬間に一度だけ処理する</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            プレイヤーの移動には、 キーを押している間ずっと動かしたいので
+            <code>keyIsDown()</code> を使用します。
+          </p>
+
+          <p>
+            一方で、ゲーム開始やリスタートには
+            <code>keyPressed()</code> を使用します。
+          </p>
+
+          <pre><code>keyPressed(): boolean {
+  if (this.state === "title" &amp;&amp; this.p.key === " ") {
+    this.state = "playing";
+    return true;
+  }
+
+  if (
+    this.state === "gameOver" &amp;&amp;
+    (this.p.key === "r" || this.p.key === "R")
+  ) {
+    this.reset();
+    this.state = "playing";
+    return true;
+  }
+
+  return false;
+}</code></pre>
+
+          <h3>ブラウザのスクロールを防ぐ</h3>
+
+          <p>
+            矢印キーやSpaceには、
+            Webページをスクロールするというブラウザ標準の動作があります。
+          </p>
+
+          <p>
+            ゲームでこれらのキーを使用するときは、
+            <code>preventDefault()</code> を使って標準動作を止めています。
+          </p>
+
+          <pre><code>if (handled || (game.isPlaying() &amp;&amp; isMovementKey)) {
+  event.preventDefault();
+}</code></pre>
+        </section>
+
+        <section id="collision">
+          <h2>6.9 衝突判定</h2>
+
+          <p>
+            今回はプレイヤー、敵、アイテムを円として描いているため、
+            円同士の中心間距離を使って衝突を判定できます。
+          </p>
+
+          <p>
+            2つの円が衝突している条件は、
+            中心間距離が半径の和より小さいことです。
+          </p>
+
+          <pre><code>const distance = p.dist(
+  this.x,
+  this.y,
+  player.x,
+  player.y,
+);
+
+return distance &lt; ENEMY_RADIUS + PLAYER_RADIUS;</code></pre>
+
+          <p><code>dist()</code> は2点間の距離を計算する p5.jsの関数です。</p>
+
+          <pre><code>中心間距離 &lt; 半径1 + 半径2
+            ↓
+          衝突</code></pre>
+
+          <p>アイテムとの衝突判定も同じ方法を使っています。</p>
+        </section>
+
+        <section id="modify">
+          <h2>6.10 改造してみる</h2>
+
+          <p>
+            サンプルコードが動いたら、
+            数値や処理を少し変更して動作がどう変わるか試してみてください。
+          </p>
+
+          <h3>簡単</h3>
+
+          <ul>
+            <li>プレイヤーの色を変える</li>
+            <li>プレイヤーの移動速度を変える</li>
+            <li>敵の移動速度を変える</li>
+            <li>Canvasの大きさを変える</li>
+            <li>敵が出現する間隔を変える</li>
+          </ul>
+
+          <h3>少し発展</h3>
+
+          <ul>
+            <li>時間が経つほど敵を速くする</li>
+            <li>敵の大きさをランダムにする</li>
+            <li>アイテムの種類を増やす</li>
+            <li>HPを追加して数回まで敵に当たれるようにする</li>
+            <li>一定スコアごとに難しくする</li>
+          </ul>
+
+          <h3>さらに発展</h3>
+
+          <ul>
+            <li>画像を使ってキャラクターを描画する</li>
+            <li>効果音やBGMを追加する</li>
+            <li>弾を撃てるようにする</li>
+            <li>新しい種類の敵を作る</li>
+            <li>マウスを使った操作を追加する</li>
+          </ul>
+
+          <p>
+            サンプルゲームと同じ構造にする必要はありません。
+            作りたいゲームに合わせて、
+            必要な処理やファイル構成を自由に変更してみてください。
+          </p>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
-          <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
+          <a href="../p5js/"> ← 前へ：5. p5.jsを使う </a>
 
-          <a class="next" href="../web/"> 次へ：4. Webページを編集する → </a>
+          <a class="next" href="../git/"> 次へ：7. Git / GitHubを使う → </a>
         </nav>
       </main>
     </div>
-
-    <script type="module" src="/src/docs.ts"></script>
   </body>
 </html>
