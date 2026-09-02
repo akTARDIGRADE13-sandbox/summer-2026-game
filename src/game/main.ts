@@ -5,15 +5,18 @@ import "../styles/game.css";
 
 import { CANVAS_HEIGHT, CANVAS_WIDTH, ENEMY_SPAWN_INTERVAL } from "./constants";
 import { Enemy } from "./Enemy";
+import { Item } from "./Item";
 import { Player } from "./Player";
 
 type GameState = "playing" | "gameOver";
 
 new p5((p) => {
   const player = new Player();
+  let item: Item;
   let enemies: Enemy[] = [];
 
   let enemySpawnTimer = 0;
+  let score = 0;
   let state: GameState = "playing";
 
   p.setup = () => {
@@ -21,6 +24,7 @@ new p5((p) => {
 
     canvas.parent("game-container");
 
+    item = new Item(p);
     enemies.push(new Enemy(p, player.x, player.y));
   };
 
@@ -29,6 +33,11 @@ new p5((p) => {
 
     if (state === "playing") {
       player.update(p);
+
+      if (item.collidesWith(p, player)) {
+        score += 1;
+        item.respawn(p);
+      }
 
       enemySpawnTimer += p.deltaTime;
 
@@ -48,11 +57,17 @@ new p5((p) => {
       enemies = enemies.filter((enemy) => !enemy.isOffscreen());
     }
 
+    item.draw(p);
     player.draw(p);
 
     for (const enemy of enemies) {
       enemy.draw(p);
     }
+
+    p.textAlign(p.LEFT, p.TOP);
+    p.textSize(24);
+    p.fill(30);
+    p.text(`Score: ${score}`, 16, 16);
 
     if (state === "gameOver") {
       p.textAlign(p.CENTER, p.CENTER);
