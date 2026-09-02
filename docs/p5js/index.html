@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/docs.css" />
-    <title>プロジェクトを作る | Summer 2026 Game</title>
+    <title>p5.jsを使う | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -22,9 +22,20 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
-          <a class="active" href="./">3. プロジェクトを作る</a>
+          <a href="../project/">3. プロジェクトを作る</a>
           <a href="../web/">4. Webページを編集する</a>
-          <a href="../p5js/">5. p5.jsを使う</a>
+
+          <a class="active" href="./">5. p5.jsを使う</a>
+
+          <div class="docs-subnav">
+            <a href="#first-sketch">5.1 p5.jsを動かす</a>
+            <a href="#setup-draw">5.2 setupとdraw</a>
+            <a href="#canvas">5.3 Canvasと描画</a>
+            <a href="#input">5.4 キーボードとマウス</a>
+            <a href="#utilities">5.5 ゲームで便利な機能</a>
+            <a href="#reference">5.6 Referenceを使う</a>
+          </div>
+
           <a href="../sample-game/">6. サンプルゲームを読む</a>
           <a href="../git/">7. Git / GitHubを使う</a>
           <a href="../deploy/">8. GitHub Pagesで公開する</a>
@@ -33,18 +44,354 @@
       </aside>
 
       <main class="docs-content">
-        <h1>3. プロジェクトを作る</h1>
+        <h1>5. p5.jsを使う</h1>
 
-        <p>TODO</p>
+        <p>
+          <strong>p5.js</strong>は、 ブラウザ上で図形や画像を描画したり、
+          キーボードやマウスからの入力を扱ったりできるJavaScriptライブラリです。
+        </p>
+
+        <p>
+          この章では、今回のゲーム制作で使用する基本的な機能を紹介します。
+          p5.jsにはほかにも多くの機能があるので、
+          必要になったものは公式Referenceを調べながら使ってみてください。
+        </p>
+
+        <section id="first-sketch">
+          <h2>5.1 p5.jsを動かす</h2>
+
+          <p>
+            前の章までで作成した
+            <code>src/main.ts</code> を、次のように書き換えてみます。
+          </p>
+
+          <pre><code>import p5 from "p5";
+
+new p5((p) =&gt; {
+  p.setup = () =&gt; {
+    p.createCanvas(640, 480);
+  };
+
+  p.draw = () =&gt; {
+    p.background(240);
+    p.circle(p.mouseX, p.mouseY, 50);
+  };
+});</code></pre>
+
+          <p>開発サーバを起動します。</p>
+
+          <pre><code>npm run dev</code></pre>
+
+          <p>
+            640 × 480の領域が表示され、
+            マウスカーソルに合わせて円が動けば成功です。
+          </p>
+
+          <p>
+            前の章で作成した
+            <code>#game-container</code> の中にCanvasを配置する場合は、
+            次のように書けます。
+          </p>
+
+          <pre><code>p.setup = () =&gt; {
+  const canvas = p.createCanvas(640, 480);
+  canvas.parent("game-container");
+};</code></pre>
+        </section>
+
+        <section id="setup-draw">
+          <h2>5.2 <code>setup()</code>と<code>draw()</code></h2>
+
+          <p>
+            p5.jsでは、
+            <code>setup()</code> と
+            <code>draw()</code> が基本的な役割を持っています。
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>関数</th>
+                <th>役割</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><code>setup()</code></td>
+                <td>開始時に一度だけ実行される</td>
+              </tr>
+
+              <tr>
+                <td><code>draw()</code></td>
+                <td>実行中に繰り返し呼ばれる</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            Canvasの作成など、一度だけ行えばよい処理は
+            <code>setup()</code> に書きます。
+          </p>
+
+          <pre><code>p.setup = () =&gt; {
+  p.createCanvas(640, 480);
+};</code></pre>
+
+          <p>
+            一方、キャラクターの移動や画面の描画など、
+            ゲーム中に繰り返したい処理は
+            <code>draw()</code> に書きます。
+          </p>
+
+          <pre><code>p.draw = () =&gt; {
+  p.background(240);
+
+  // 状態を更新する
+  // 画面を描画する
+};</code></pre>
+
+          <p>
+            <code>background()</code> はCanvas全体を指定した色で塗ります。
+            毎フレーム最初に呼ぶことで、
+            前のフレームに描いた図形を消しています。
+          </p>
+
+          <aside class="note">
+            <strong>なぜ繰り返し描画するのか</strong>
+
+            <p>
+              ゲームでは、 「状態を少し更新して画面を描き直す」
+              という処理を高速に繰り返すことで、
+              キャラクターが動いているように見せます。
+              この繰り返しをゲームループと呼ぶことがあります。
+            </p>
+          </aside>
+        </section>
+
+        <section id="canvas">
+          <h2>5.3 Canvasと描画</h2>
+
+          <h3>座標</h3>
+
+          <p>p5.jsのCanvasでは、 左上が原点 <code>(0, 0)</code> になります。</p>
+
+          <pre><code>(0, 0) ─────────────→ x
+  │
+  │
+  │
+  ↓
+  y</code></pre>
+
+          <p>
+            x座標は右へ行くほど大きくなり、 y座標は下へ行くほど大きくなります。
+          </p>
+
+          <h3>図形を描く</h3>
+
+          <p>例えば、円は次のように描けます。</p>
+
+          <pre><code>p.circle(320, 240, 50);</code></pre>
+
+          <p>
+            この例では、
+            <code>(320, 240)</code> を中心として、 直径50の円を描画しています。
+          </p>
+
+          <p>長方形は次のように描けます。</p>
+
+          <pre><code>p.rect(100, 100, 80, 40);</code></pre>
+
+          <h3>色を指定する</h3>
+
+          <p>
+            <code>fill()</code> で、その後に描画する図形の色を指定できます。
+          </p>
+
+          <pre><code>p.fill(50, 100, 220);
+p.circle(320, 240, 50);</code></pre>
+
+          <p>このように3つの値を指定した場合は、 RGBの赤・緑・青を表します。</p>
+
+          <p><code>background()</code> でも同様に色を指定できます。</p>
+
+          <pre><code>p.background(240);</code></pre>
+
+          <p>
+            値を1つだけ指定した場合はグレースケールになり、
+            <code>0</code> が黒、 <code>255</code> が白です。
+          </p>
+
+          <h3>文字を描く</h3>
+
+          <p>スコアなどの文字もCanvasへ描画できます。</p>
+
+          <pre><code>p.fill(30);
+p.textSize(24);
+p.text("Score: 10", 16, 32);</code></pre>
+        </section>
+
+        <section id="input">
+          <h2>5.4 キーボードとマウス</h2>
+
+          <h3>マウスの位置を取得する</h3>
+
+          <p>
+            現在のマウスカーソルの座標は、
+            <code>mouseX</code> と <code>mouseY</code> から取得できます。
+          </p>
+
+          <pre><code>p.circle(p.mouseX, p.mouseY, 50);</code></pre>
+
+          <h3>押されているキーを調べる</h3>
+
+          <p>
+            キーを押している間キャラクターを動かしたい場合は、
+            <code>keyIsDown()</code> が便利です。
+          </p>
+
+          <pre><code>if (p.keyIsDown(87)) {
+  y -= 1;
+}</code></pre>
+
+          <p>
+            <code>87</code> はWキーのキーコードです。
+            矢印キーについては、例えば次のように書けます。
+          </p>
+
+          <pre><code>if (p.keyIsDown(p.LEFT_ARROW)) {
+  x -= 1;
+}</code></pre>
+
+          <p>
+            この処理を <code>draw()</code> の中で繰り返すことで、
+            キーを押している間、連続してキャラクターを動かせます。
+          </p>
+
+          <h3>キーが押された瞬間を扱う</h3>
+
+          <p>
+            「Spaceキーを押したらゲーム開始」のように、
+            キーを押した瞬間に一度だけ処理したい場合は
+            <code>keyPressed()</code> を利用できます。
+          </p>
+
+          <pre><code>p.keyPressed = () =&gt; {
+  if (p.key === " ") {
+    console.log("Start!");
+  }
+};</code></pre>
+
+          <p>
+            今回のサンプルゲームでも、 移動には <code>keyIsDown()</code>、
+            ゲーム開始やリスタートには
+            <code>keyPressed()</code> を使い分けています。
+          </p>
+        </section>
+
+        <section id="utilities">
+          <h2>5.5 ゲームで便利な機能</h2>
+
+          <p>
+            今回のサンプルゲームでは、
+            p5.jsのいくつかの便利な機能も使用しています。
+          </p>
+
+          <h3><code>random()</code></h3>
+
+          <p>ランダムな値を生成します。</p>
+
+          <pre><code>const x = p.random(0, 640);
+const y = p.random(0, 480);</code></pre>
+
+          <p>アイテムや敵の出現位置をランダムにするときなどに利用できます。</p>
+
+          <h3><code>dist()</code></h3>
+
+          <p>2点間の距離を求めます。</p>
+
+          <pre><code>const distance = p.dist(x1, y1, x2, y2);</code></pre>
+
+          <p>
+            今回のゲームでは、
+            プレイヤーと敵やアイテムとの衝突判定に使用します。
+          </p>
+
+          <h3><code>constrain()</code></h3>
+
+          <p>値を指定した範囲内に収めます。</p>
+
+          <pre><code>x = p.constrain(x, 0, 640);</code></pre>
+
+          <p>
+            プレイヤーがCanvasの外へ出ないようにするときなどに利用できます。
+          </p>
+
+          <h3><code>deltaTime</code></h3>
+
+          <p>
+            <code>deltaTime</code> には、
+            前のフレームから現在のフレームまでに経過した時間が
+            ミリ秒単位で入っています。
+          </p>
+
+          <pre><code>const dt = p.deltaTime / 1000;
+
+x += speed * dt;</code></pre>
+
+          <p>
+            このように経過時間を使って移動量を計算すると、
+            フレームレートが変わっても
+            キャラクターの移動速度をほぼ一定にできます。
+          </p>
+        </section>
+
+        <section id="reference">
+          <h2>5.6 Referenceを使う</h2>
+
+          <p>
+            p5.jsには非常に多くの関数や機能があります。
+            すべてを覚える必要はありません。
+          </p>
+
+          <p>
+            「円を描きたい」「画像を表示したい」「キー入力を扱いたい」
+            といった必要が出てきたときに、
+            p5.jsの公式Referenceを検索して使い方を確認するのがおすすめです。
+          </p>
+
+          <p>
+            <a
+              href="https://p5js.org/reference/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              p5.js Reference
+            </a>
+          </p>
+
+          <p>
+            例えば、この章で使用した
+            <code>circle()</code>、 <code>keyIsDown()</code>、
+            <code>random()</code>、
+            <code>dist()</code>
+            などもReferenceから確認できます。
+          </p>
+
+          <p>
+            画像、音声、より複雑な描画などを使いたくなった場合も、
+            まずReferenceから関連する機能を探してみてください。
+          </p>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
-          <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
+          <a href="../web/"> ← 前へ：4. Webページを編集する </a>
 
-          <a class="next" href="../web/"> 次へ：4. Webページを編集する → </a>
+          <a class="next" href="../sample-game/">
+            次へ：6. サンプルゲームを読む →
+          </a>
         </nav>
       </main>
     </div>
-
-    <script type="module" src="/src/docs.ts"></script>
   </body>
 </html>
