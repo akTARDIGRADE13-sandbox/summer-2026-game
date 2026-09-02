@@ -1,4 +1,28 @@
 #game-container {
   display: flex;
   justify-content: center;
+  margin: 32px 0;
+}
+
+#game-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.game-info {
+  margin-top: 32px;
+}
+
+.game-info dl {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 16px;
+}
+
+.game-info dt {
+  font-weight: bold;
+}
+
+.game-info dd {
+  margin: 0;
 }

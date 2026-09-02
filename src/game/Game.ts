@@ -50,10 +50,10 @@ export class Game {
     }
   }
 
-  keyPressed(): void {
+  keyPressed(): boolean {
     if (this.state === "title" && this.p.key === " ") {
       this.state = "playing";
-      return;
+      return true;
     }
 
     if (
@@ -62,7 +62,14 @@ export class Game {
     ) {
       this.reset();
       this.state = "playing";
+      return true;
     }
+
+    return false;
+  }
+
+  isPlaying(): boolean {
+    return this.state === "playing";
   }
 
   private updateItem(): void {

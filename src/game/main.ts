@@ -22,7 +22,22 @@ new p5((p) => {
     game.draw();
   };
 
-  p.keyPressed = () => {
-    game.keyPressed();
+  p.keyPressed = (event) => {
+    const handled = game.keyPressed();
+
+    if (!event) {
+      return;
+    }
+
+    const isMovementKey = [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+    ].includes(event.key);
+
+    if (handled || (game.isPlaying() && isMovementKey)) {
+      event.preventDefault();
+    }
   };
 });
