@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/docs.css" />
-    <title>プロジェクトを作る | Summer 2026 Game</title>
+    <title>Git / GitHubを使う | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -22,29 +22,502 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
-          <a class="active" href="./">3. プロジェクトを作る</a>
+          <a href="../project/">3. プロジェクトを作る</a>
           <a href="../web/">4. Webページを編集する</a>
           <a href="../p5js/">5. p5.jsを使う</a>
           <a href="../sample-game/">6. サンプルゲームを読む</a>
-          <a href="../git/">7. Git / GitHubを使う</a>
+
+          <a class="active" href="./">7. Git / GitHubを使う</a>
+
+          <div class="docs-subnav">
+            <a href="#overview">7.1 GitとGitHub</a>
+            <a href="#config">7.2 Gitの初期設定</a>
+            <a href="#ssh">7.3 SSHでGitHubへ接続する</a>
+            <a href="#clone">7.4 リポジトリをcloneする</a>
+            <a href="#basic">7.5 基本的なGit操作</a>
+            <a href="#branch">7.6 branchを使う</a>
+            <a href="#pull-request">7.7 Pull Request</a>
+            <a href="#references">7.8 参考資料</a>
+          </div>
+
           <a href="../deploy/">8. GitHub Pagesで公開する</a>
           <a href="../advanced/">9. 発展・参考資料</a>
         </nav>
       </aside>
 
       <main class="docs-content">
-        <h1>3. プロジェクトを作る</h1>
+        <h1>7. Git / GitHubを使う</h1>
 
-        <p>TODO</p>
+        <p>
+          ゲームのソースコードはGitで管理し、
+          GitHubを使ってチーム内で共有します。
+        </p>
+
+        <p>
+          この章では、GitHubへSSHで接続し、
+          ソースコードを取得・変更・共有するまでの基本的な流れを紹介します。
+        </p>
+
+        <aside class="note">
+          <strong>この章について</strong>
+
+          <p>
+            Gitには非常に多くの機能がありますが、
+            最初からすべて覚える必要はありません。
+            ここでは今回の開発でよく使う操作に絞って説明します。
+          </p>
+        </aside>
+
+        <section id="overview">
+          <h2>7.1 GitとGitHub</h2>
+
+          <p>
+            <strong>Git</strong>は、
+            ファイルの変更履歴を管理するためのバージョン管理システムです。
+          </p>
+
+          <p>
+            <strong>GitHub</strong>は、
+            Gitで管理しているリポジトリをオンラインで共有できるサービスです。
+          </p>
+
+          <p>大まかには次のような関係です。</p>
+
+          <pre><code>自分のPC
+   │
+   │ Gitで変更履歴を管理
+   ↓
+ローカルリポジトリ
+   │
+   │ git push
+   ↓
+GitHub</code></pre>
+
+          <p>
+            GitHubに置かれているリポジトリを自分のPCへ取得したり、
+            自分が行った変更をGitHubへ送ったりしながら開発を進めます。
+          </p>
+        </section>
+
+        <section id="config">
+          <h2>7.2 Gitの初期設定</h2>
+
+          <p>
+            Gitでcommitを作成するときには、
+            誰が変更したのかを記録するための名前とメールアドレスが必要です。
+          </p>
+
+          <p>まず現在の設定を確認します。</p>
+
+          <pre><code>git config --global user.name
+git config --global user.email</code></pre>
+
+          <p>まだ設定されていない場合は、次のように設定します。</p>
+
+          <pre><code>git config --global user.name "Your Name"
+git config --global user.email "your_email@example.com"</code></pre>
+
+          <p>
+            GitHubでcommitを自分のアカウントと関連付けたい場合は、
+            GitHubアカウントに登録しているメールアドレスを使用します。
+          </p>
+
+          <aside class="note">
+            <strong>メールアドレスを公開したくない場合</strong>
+
+            <p>
+              GitHubでは、commit用の非公開メールアドレスを利用することもできます。
+              詳しくはGitHubのメールアドレス設定を確認してください。
+            </p>
+          </aside>
+        </section>
+
+        <section id="ssh">
+          <h2>7.3 SSHでGitHubへ接続する</h2>
+
+          <p>
+            このチュートリアルでは、
+            GitHubとの通信に<strong>SSH</strong>を使用します。
+          </p>
+
+          <p>
+            SSHでは、自分のPCに
+            <strong>秘密鍵</strong>と<strong>公開鍵</strong>の組を作成し、
+            公開鍵だけをGitHubへ登録します。
+          </p>
+
+          <pre><code>WSL
+├── 秘密鍵  ← 自分だけが持つ
+└── 公開鍵  ─────────→ GitHubへ登録</code></pre>
+
+          <h3>SSH鍵がすでにあるか確認する</h3>
+
+          <p>まず、SSH用のディレクトリを確認します。</p>
+
+          <pre><code>ls ~/.ssh</code></pre>
+
+          <p>
+            例えば、
+            <code>id_ed25519</code> と
+            <code>id_ed25519.pub</code>
+            がすでに存在する場合は、 既存のSSH鍵を使える可能性があります。
+          </p>
+
+          <aside class="note">
+            <strong>秘密鍵を共有しない</strong>
+
+            <p>
+              <code>id_ed25519</code> は秘密鍵です。 GitHubへ登録するのは
+              <code>id_ed25519.pub</code> のように
+              <code>.pub</code> が付いた公開鍵だけです。
+            </p>
+          </aside>
+
+          <h3>SSH鍵を作成する</h3>
+
+          <p>SSH鍵がない場合は、次のコマンドで作成します。</p>
+
+          <pre><code>ssh-keygen -t ed25519 -C "your_email@example.com"</code></pre>
+
+          <p>
+            保存場所を聞かれたら、 特に変更する必要がなければEnterを押して
+            デフォルトの場所を使用できます。
+          </p>
+
+          <p>
+            続いてパスフレーズの入力を求められます。
+            パスフレーズを設定する場合は、 忘れないように管理してください。
+          </p>
+
+          <p>作成すると、通常は次の2つのファイルができます。</p>
+
+          <pre><code>~/.ssh/id_ed25519
+~/.ssh/id_ed25519.pub</code></pre>
+
+          <h3>ssh-agentへ鍵を追加する</h3>
+
+          <p>
+            SSH鍵を利用できるように、
+            <code>ssh-agent</code> を起動します。
+          </p>
+
+          <pre><code>eval "$(ssh-agent -s)"</code></pre>
+
+          <p>作成した秘密鍵を追加します。</p>
+
+          <pre><code>ssh-add ~/.ssh/id_ed25519</code></pre>
+
+          <h3>公開鍵をGitHubへ登録する</h3>
+
+          <p>次のコマンドで公開鍵の内容を表示します。</p>
+
+          <pre><code>cat ~/.ssh/id_ed25519.pub</code></pre>
+
+          <p>表示された内容をすべてコピーします。</p>
+
+          <p>GitHubで次の場所を開きます。</p>
+
+          <ol>
+            <li>GitHub右上のプロフィール画像をクリック</li>
+            <li><strong>Settings</strong>を開く</li>
+            <li><strong>SSH and GPG keys</strong>を開く</li>
+            <li><strong>New SSH key</strong>を選ぶ</li>
+            <li>先ほどコピーした公開鍵を登録する</li>
+          </ol>
+
+          <p>
+            Titleには、
+            <code>WSL</code> や <code>My PC</code> など、
+            どのPCの鍵なのか分かる名前を付けておくと便利です。
+          </p>
+
+          <h3>接続を確認する</h3>
+
+          <p>
+            公開鍵を登録できたら、 次のコマンドでGitHubへの接続を確認します。
+          </p>
+
+          <pre><code>ssh -T git@github.com</code></pre>
+
+          <p>
+            初めて接続するときは、
+            GitHubのホスト鍵を信頼するか確認される場合があります。
+          </p>
+
+          <p>
+            GitHubへの認証に成功したことを示すメッセージが表示されれば準備完了です。
+          </p>
+        </section>
+
+        <section id="clone">
+          <h2>7.4 リポジトリをcloneする</h2>
+
+          <p>
+            GitHub上にあるリポジトリを自分のPCへ取得する操作を
+            <strong>clone</strong> と呼びます。
+          </p>
+
+          <p>
+            GitHubのリポジトリページで
+            <strong>Code</strong>をクリックし、
+            <strong>SSH</strong>を選択すると、 次のようなURLが表示されます。
+          </p>
+
+          <pre><code>git@github.com:organization/repository.git</code></pre>
+
+          <p>
+            作業用ディレクトリへ移動してから、
+            <code>git clone</code> を実行します。
+          </p>
+
+          <pre><code>cd ~/projects
+git clone git@github.com:organization/repository.git</code></pre>
+
+          <p>
+            cloneが完了すると、 リポジトリ名と同じディレクトリが作成されます。
+          </p>
+
+          <pre><code>cd repository</code></pre>
+
+          <p>現在の状態は次のコマンドで確認できます。</p>
+
+          <pre><code>git status</code></pre>
+        </section>
+
+        <section id="basic">
+          <h2>7.5 基本的なGit操作</h2>
+
+          <p>開発中によく使う基本的な流れは次のようになります。</p>
+
+          <pre><code>ファイルを編集する
+    ↓
+git status
+    ↓
+git add
+    ↓
+git commit
+    ↓
+git push</code></pre>
+
+          <h3>変更を確認する</h3>
+
+          <pre><code>git status</code></pre>
+
+          <p>
+            変更されたファイルや、
+            まだGitで管理されていないファイルなどを確認できます。
+          </p>
+
+          <h3>commitするファイルを選ぶ</h3>
+
+          <p>変更したファイルをcommitの対象に追加します。</p>
+
+          <pre><code>git add src/main.ts</code></pre>
+
+          <p>
+            現在のディレクトリ以下の変更をまとめて追加する場合は、
+            次のようにも書けます。
+          </p>
+
+          <pre><code>git add .</code></pre>
+
+          <p>
+            <code>git add</code> を実行したあとも、
+            <code>git status</code> で状態を確認できます。
+          </p>
+
+          <h3>commitを作る</h3>
+
+          <pre><code>git commit -m "feat: add player movement"</code></pre>
+
+          <p>commitは、その時点での変更を履歴として記録する操作です。</p>
+
+          <p>
+            メッセージには、
+            「何を変更したのか」が後から分かる内容を書くようにします。
+          </p>
+
+          <h3>GitHubへ送る</h3>
+
+          <pre><code>git push</code></pre>
+
+          <p>ローカルで作成したcommitがGitHubへ送られます。</p>
+
+          <h3>GitHub側の変更を取得する</h3>
+
+          <pre><code>git pull</code></pre>
+
+          <p>
+            他のメンバーがGitHubへ送った変更などを、
+            自分のローカルリポジトリへ取り込みます。
+          </p>
+
+          <aside class="note">
+            <strong>困ったらまず <code>git status</code></strong>
+
+            <p>
+              Gitで現在どういう状態になっているか分からなくなった場合は、 まず
+              <code>git status</code> を確認するのがおすすめです。
+            </p>
+          </aside>
+        </section>
+
+        <section id="branch">
+          <h2>7.6 branchを使う</h2>
+
+          <p>
+            チーム開発では、
+            <code>main</code> branchを直接編集するのではなく、
+            作業ごとに新しいbranchを作る方法がよく使われます。
+          </p>
+
+          <p>
+            例えば、プレイヤーの移動を実装する場合は、
+            次のようにbranchを作れます。
+          </p>
+
+          <pre><code>git switch -c feature/player-movement</code></pre>
+
+          <p>現在のbranchは次のコマンドで確認できます。</p>
+
+          <pre><code>git branch</code></pre>
+
+          <p>
+            ファイルを編集してcommitしたら、 新しいbranchをGitHubへ送ります。
+          </p>
+
+          <pre><code>git push -u origin feature/player-movement</code></pre>
+
+          <p>
+            最初のpushで
+            <code>-u origin ...</code> を指定しておくと、
+            その後は同じbranchで単に <code>git push</code> と実行できます。
+          </p>
+
+          <p><code>main</code> に戻る場合は次のようにします。</p>
+
+          <pre><code>git switch main</code></pre>
+
+          <p>
+            GitHub側の最新の変更を取り込む場合は、
+            必要に応じて次のようにします。
+          </p>
+
+          <pre><code>git pull</code></pre>
+        </section>
+
+        <section id="pull-request">
+          <h2>7.7 Pull Request</h2>
+
+          <p>
+            branchをGitHubへpushしたら、
+            <strong>Pull Request</strong>を作成できます。
+          </p>
+
+          <p>
+            Pull Requestを使うと、 自分のbranchで行った変更を
+            <code>main</code> へ取り込む前に、
+            他のメンバーに内容を確認してもらえます。
+          </p>
+
+          <pre><code>feature/player-movement
+          │
+          │ Pull Request
+          ↓
+        main</code></pre>
+
+          <p>基本的な流れは次のようになります。</p>
+
+          <ol>
+            <li>作業用branchを作る</li>
+            <li>ファイルを編集する</li>
+            <li>変更をcommitする</li>
+            <li>branchをGitHubへpushする</li>
+            <li>GitHub上でPull Requestを作る</li>
+            <li>必要に応じてレビューや修正を行う</li>
+            <li>問題がなければmainへmergeする</li>
+          </ol>
+
+          <p>
+            チームで同じコードを編集する場合は、 大きな変更を一度に行うより、
+            内容ごとにbranchやPull Requestを分けると確認しやすくなります。
+          </p>
+
+          <aside class="note">
+            <strong>commitはこまめに作る</strong>
+
+            <p>
+              いくつもの無関係な変更を1つのcommitにまとめるより、
+              「プレイヤー移動を追加」 「敵を追加」
+              のように意味のある単位でcommitしておくと、
+              後から履歴を追いやすくなります。
+            </p>
+          </aside>
+        </section>
+
+        <section id="references">
+          <h2>7.8 参考資料</h2>
+
+          <p>
+            GitやGitHubには、 この章では紹介していない多くの機能があります。
+            詳しく知りたい場合は公式ドキュメントを参照してください。
+          </p>
+
+          <ul>
+            <li>
+              <a
+                href="https://git-scm.com/book/ja/v2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Pro Git 日本語版
+              </a>
+              ：Gitの仕組みや操作を詳しく学べます。
+            </li>
+
+            <li>
+              <a
+                href="https://docs.github.com/ja/authentication/connecting-to-github-with-ssh"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SSHを使用したGitHubへの接続
+              </a>
+              ：SSH鍵の作成や登録方法についてのGitHub公式ドキュメントです。
+            </li>
+
+            <li>
+              <a
+                href="https://docs.github.com/ja/get-started/using-git/about-git"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Gitについて
+              </a>
+              ：GitとGitHubの基本についてのGitHub公式ドキュメントです。
+            </li>
+
+            <li>
+              <a
+                href="https://docs.github.com/ja/pull-requests"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Pull Request
+              </a>
+              ：Pull RequestについてのGitHub公式ドキュメントです。
+            </li>
+          </ul>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
-          <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
+          <a href="../sample-game/"> ← 前へ：6. サンプルゲームを読む </a>
 
-          <a class="next" href="../web/"> 次へ：4. Webページを編集する → </a>
+          <a class="next" href="../deploy/">
+            次へ：8. GitHub Pagesで公開する →
+          </a>
         </nav>
       </main>
     </div>
-
-    <script type="module" src="/src/docs.ts"></script>
   </body>
 </html>
