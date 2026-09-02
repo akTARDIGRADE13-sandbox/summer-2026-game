@@ -1,8 +1,5 @@
 import p5 from "p5";
 
-import "../styles/common.css";
-import "../styles/game.css";
-
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./constants";
 import { Game } from "./Game";
 
