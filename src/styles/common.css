@@ -54,14 +54,26 @@ a:hover {
   gap: 24px;
 }
 
+.site-nav-main {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
 .site-nav a {
   color: #24292f;
   font-weight: 500;
+  text-decoration: none;
 }
 
 .site-nav a:hover {
   color: #0969da;
   text-decoration: none;
+}
+
+.site-nav-github {
+  margin-left: auto;
+  color: #57606a;
 }
 
 /* Generic page */

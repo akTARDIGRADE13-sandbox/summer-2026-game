@@ -3,32 +3,200 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/home.css" />
+
     <title>Summer 2026 Game</title>
   </head>
 
   <body>
     <header class="site-header">
       <nav class="site-nav" aria-label="Main navigation">
-        <a href="./">Home</a>
-        <a href="./game/">Play</a>
-        <a href="./docs/">Docs</a>
+        <div class="site-nav-main">
+          <a href="./">Home</a>
+          <a href="./game/">Play</a>
+          <a href="./docs/">Docs</a>
+        </div>
+
+        <a
+          class="site-nav-github"
+          href="https://github.com/akTARDIGRADE13-sandbox/summer-2026-game"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
       </nav>
     </header>
+    
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="hero-label">Summer 2026 Game</p>
 
-    <main class="page-container">
-      <h1>Summer 2026 Game</h1>
+          <h1>
+            p5.js + TypeScriptで<br />
+            Webゲームを作ろう
+          </h1>
 
-      <p>
-        p5.js + TypeScriptでWebゲームを作って、 GitHub
-        Pagesで公開するためのサンプルプロジェクトです。
-      </p>
+          <p class="hero-description">
+            開発環境の準備からゲーム制作、
+            GitHub Pagesでの公開までをまとめたサンプルプロジェクトです。
+          </p>
 
-      <p>
-        <a href="./game/">ゲームをプレイ</a>
-        <a href="./docs/">ドキュメントを読む</a>
-      </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="./game/">
+              ゲームをプレイ
+            </a>
+
+            <a class="button button-secondary" href="./docs/">
+              ドキュメントを読む
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-section">
+        <div class="section-heading">
+          <p class="section-label">Sample Game</p>
+          <h2>Dodge Game</h2>
+        </div>
+
+        <div class="game-card">
+          <div class="game-preview" aria-hidden="true">
+            <div class="preview-score">Score: 3</div>
+            <div class="preview-enemy preview-enemy-1"></div>
+            <div class="preview-enemy preview-enemy-2"></div>
+            <div class="preview-item"></div>
+            <div class="preview-player"></div>
+          </div>
+
+          <div class="game-card-content">
+            <p>
+              プレイヤーを操作して敵を避けながら、
+              フィールド上のアイテムを集めるシンプルなゲームです。
+            </p>
+
+            <p>
+              p5.jsによる描画、キー入力、衝突判定、
+              ゲームループなどの基本的な処理を確認できます。
+            </p>
+
+            <div class="card-actions">
+              <a href="./game/">ゲームをプレイ →</a>
+              <a href="./docs/sample-game/">コードの解説を読む →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-section">
+        <div class="section-heading">
+          <p class="section-label">Getting Started</p>
+          <h2>このサイトで扱うこと</h2>
+
+          <p>
+            初めてWebゲームを作る場合は、
+            開発環境の準備から順番に進めてみてください。
+          </p>
+        </div>
+
+        <div class="topic-grid">
+          <article class="topic-card">
+            <span class="topic-number">01</span>
+
+            <h3>開発環境を準備する</h3>
+
+            <p>
+              WSL、Node.js、npm、VS Codeなど、
+              ゲーム開発に必要な環境を準備します。
+            </p>
+
+            <a href="./docs/environment/">環境構築を見る →</a>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">02</span>
+
+            <h3>Webプロジェクトを作る</h3>
+
+            <p>
+              ViteとTypeScriptを使ってプロジェクトを作成し、
+              ブラウザで動かします。
+            </p>
+
+            <a href="./docs/project/">プロジェクト作成を見る →</a>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">03</span>
+
+            <h3>p5.jsでゲームを作る</h3>
+
+            <p>
+              描画、入力、座標など、
+              ゲーム制作で使うp5.jsの基本を紹介します。
+            </p>
+
+            <a href="./docs/p5js/">p5.jsのガイドを見る →</a>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">04</span>
+
+            <h3>Web上に公開する</h3>
+
+            <p>
+              GitとGitHubでコードを管理し、
+              GitHub Pagesへ自動でデプロイします。
+            </p>
+
+            <a href="./docs/deploy/">公開方法を見る →</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="home-section">
+        <div class="section-heading">
+          <p class="section-label">Technologies</p>
+          <h2>使用する技術</h2>
+        </div>
+
+        <div class="technology-list">
+          <span>WSL</span>
+          <span>HTML</span>
+          <span>CSS</span>
+          <span>TypeScript</span>
+          <span>Node.js</span>
+          <span>npm</span>
+          <span>Vite</span>
+          <span>p5.js</span>
+          <span>Git</span>
+          <span>GitHub</span>
+          <span>GitHub Pages</span>
+        </div>
+      </section>
+
+      <section class="start-section">
+        <div>
+          <p class="section-label">Start</p>
+
+          <h2>まずは開発環境を準備してみよう</h2>
+
+          <p>
+            初めての場合は、WSLやNode.jsのセットアップから始めるのがおすすめです。
+          </p>
+        </div>
+
+        <a class="button button-primary" href="./docs/environment/">
+          はじめる →
+        </a>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <p>Summer 2026 Game</p>
+    </footer>
   </body>
 </html>
