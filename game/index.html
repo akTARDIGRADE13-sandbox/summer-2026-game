@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/game.css" />
-    <title>Play | Summer 2026 Game</title>
+    <title>Dodge Game | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -14,44 +14,119 @@
         <a href="../">Home</a>
         <a href="./">Play</a>
         <a href="../docs/">Docs</a>
+
+        <a
+          class="site-nav-github"
+          href="https://github.com/akTARDIGRADE13-sandbox/summer-2026-game"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
       </nav>
     </header>
 
-    <main class="page-container">
-      <h1>Dodge Game</h1>
+    <main class="game-page">
+      <section class="game-header">
+        <p class="game-label">Sample Game</p>
 
-      <p>敵を避けながらアイテムを集めて、できるだけ高いスコアを目指します。</p>
+        <h1>Dodge Game</h1>
 
-      <div id="game-container"></div>
-
-      <section class="game-info">
-        <h2>操作方法</h2>
-
-        <dl>
-          <dt>移動</dt>
-          <dd>WASD / 矢印キー</dd>
-
-          <dt>ゲーム開始</dt>
-          <dd>Space</dd>
-
-          <dt>リスタート</dt>
-          <dd>R</dd>
-        </dl>
+        <p class="game-description">
+          敵を避けながらアイテムを集めて、
+          できるだけ高いスコアを目指します。
+        </p>
       </section>
 
-      <section class="game-info">
-        <h2>このサンプルについて</h2>
+      <section class="game-area">
+        <div class="game-frame">
+          <div id="game-container"></div>
+        </div>
 
-        <p>
-          このゲームでは、p5.jsによる描画、キーボード入力、
-          衝突判定、ゲームループなどの基本的な処理を扱っています。
-        </p>
+        <aside class="controls-card">
+          <h2>操作方法</h2>
 
-        <p>
-          <a href="../docs/#sample-game">コードの解説を読む</a>
-        </p>
+          <dl class="controls">
+            <div>
+              <dt>移動</dt>
+              <dd>
+                <kbd>W</kbd>
+                <kbd>A</kbd>
+                <kbd>S</kbd>
+                <kbd>D</kbd>
+                <span>または</span>
+                <kbd>↑</kbd>
+                <kbd>←</kbd>
+                <kbd>↓</kbd>
+                <kbd>→</kbd>
+              </dd>
+            </div>
+
+            <div>
+              <dt>ゲーム開始</dt>
+              <dd><kbd>Space</kbd></dd>
+            </div>
+
+            <div>
+              <dt>リスタート</dt>
+              <dd><kbd>R</kbd></dd>
+            </div>
+          </dl>
+
+          <p class="controls-note">
+            黄色いアイテムを集めるとスコアが増えます。
+            赤い敵に触れるとゲームオーバーです。
+          </p>
+        </aside>
+      </section>
+
+      <section class="game-details">
+        <article class="game-info-card">
+          <p class="game-label">About</p>
+          <h2>このサンプルについて</h2>
+
+          <p>
+            このゲームでは、p5.jsによる描画、キーボード入力、
+            衝突判定、ゲームループ、ランダムな敵生成などを使用しています。
+          </p>
+
+          <a href="../docs/sample-game/">
+            サンプルコードの解説を読む →
+          </a>
+        </article>
+
+        <article class="game-info-card">
+          <p class="game-label">Source Code</p>
+          <h2>コードを見る</h2>
+
+          <p>
+            ゲームのソースコードはGitHubで公開しています。
+            実際のファイル構成や実装も確認してみてください。
+          </p>
+
+          <a
+            href="https://github.com/akTARDIGRADE13-sandbox/summer-2026-game/tree/main/src/game"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHubでコードを見る →
+          </a>
+        </article>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <p>
+        Summer 2026 Game ·
+        <a
+          href="https://github.com/akTARDIGRADE13-sandbox/summer-2026-game"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </p>
+    </footer>
 
     <script type="module" src="/src/game/main.ts"></script>
   </body>
