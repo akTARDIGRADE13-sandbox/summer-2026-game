@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/docs.css" />
-    <title>プロジェクトを作る | Summer 2026 Game</title>
+
+    <title>GitHub Pagesで公開する | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -22,25 +24,404 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
-          <a class="active" href="./">3. プロジェクトを作る</a>
+          <a href="../project/">3. プロジェクトを作る</a>
           <a href="../web/">4. Webページを編集する</a>
           <a href="../p5js/">5. p5.jsを使う</a>
           <a href="../sample-game/">6. サンプルゲームを読む</a>
           <a href="../git/">7. Git / GitHubを使う</a>
-          <a href="../deploy/">8. GitHub Pagesで公開する</a>
+
+          <a class="active" href="./">8. GitHub Pagesで公開する</a>
+
+          <div class="docs-subnav">
+            <a href="#build">8.1 production build</a>
+            <a href="#base">8.2 Viteのbaseを設定する</a>
+            <a href="#pages">8.3 GitHub Pagesを有効にする</a>
+            <a href="#workflow">8.4 Workflowを作る</a>
+            <a href="#deploy">8.5 デプロイする</a>
+            <a href="#trouble">8.6 うまくいかない場合</a>
+          </div>
+
           <a href="../advanced/">9. 発展・参考資料</a>
         </nav>
       </aside>
 
       <main class="docs-content">
-        <h1>3. プロジェクトを作る</h1>
+        <h1>8. GitHub Pagesで公開する</h1>
 
-        <p>TODO</p>
+        <p>
+          作成したWebサイトは、
+          <strong>GitHub Pages</strong>を使ってインターネット上に公開できます。
+        </p>
+
+        <p>
+          今回は、main branchへpushしたときにGitHub Actionsで自動的にビルドし、
+          GitHub Pagesへデプロイするように設定します。
+        </p>
+
+        <pre><code>ローカルで開発
+    ↓
+git push
+    ↓
+GitHub Actions
+    ↓
+npm run build
+    ↓
+dist/
+    ↓
+GitHub Pages</code></pre>
+
+        <section id="build">
+          <h2>8.1 production build</h2>
+
+          <p>
+            開発中は次のコマンドで開発サーバを起動していました。
+          </p>
+
+          <pre><code>npm run dev</code></pre>
+
+          <p>
+            公開するときは、開発用のファイルをそのまま置くのではなく、
+            production用にビルドします。
+          </p>
+
+          <pre><code>npm run build</code></pre>
+
+          <p>
+            ビルドに成功すると、通常は
+            <code>dist/</code> ディレクトリが作成されます。
+          </p>
+
+          <pre><code>dist/
+├── index.html
+├── assets/
+└── ...</code></pre>
+
+          <p>
+            GitHub Pagesには、この
+            <code>dist/</code> の内容を公開します。
+          </p>
+
+          <aside class="note">
+            <strong>pushする前にbuildを確認する</strong>
+
+            <p>
+              GitHub Actions上で初めてエラーに気付くより、
+              先にローカルで
+              <code>npm run build</code>
+              を実行しておくと問題を見つけやすくなります。
+            </p>
+          </aside>
+
+          <p>
+            ビルドしたページをローカルで確認したい場合は、
+            次のコマンドも利用できます。
+          </p>
+
+          <pre><code>npm run preview</code></pre>
+        </section>
+
+        <section id="base">
+          <h2>8.2 Viteの<code>base</code>を設定する</h2>
+
+          <p>
+            GitHub Pagesでは、リポジトリ名によって公開URLが変わります。
+          </p>
+
+          <p>
+            例えば、リポジトリ名が
+            <code>my-game</code>
+            の場合、Project Pagesでは次のような形になります。
+          </p>
+
+          <pre><code>https://&lt;user-or-organization&gt;.github.io/my-game/</code></pre>
+
+          <p>
+            このようにルート直下ではなく
+            <code>/my-game/</code>
+            以下へ公開されるため、
+            Viteにもそのパスを設定します。
+          </p>
+
+          <p>
+            <code>vite.config.ts</code> に
+            <code>base</code> を追加します。
+          </p>
+
+          <pre><code>import { defineConfig } from "vite";
+
+export default defineConfig({
+  base: "/my-game/",
+});</code></pre>
+
+          <p>
+            このサンプルリポジトリでは名前が
+            <code>summer-2026-game</code>
+            なので、次のように設定しています。
+          </p>
+
+          <pre><code>base: "/summer-2026-game/",</code></pre>
+
+          <aside class="note">
+            <strong><code>base</code>を忘れると</strong>
+
+            <p>
+              HTML自体は表示されても、
+              JavaScriptやCSSなどのファイルを正しい場所から読み込めず、
+              ページが崩れたりゲームが動かなかったりすることがあります。
+            </p>
+          </aside>
+        </section>
+
+        <section id="pages">
+          <h2>8.3 GitHub Pagesを有効にする</h2>
+
+          <p>
+            GitHub上で、公開したいリポジトリを開きます。
+          </p>
+
+          <ol>
+            <li><strong>Settings</strong>を開く</li>
+            <li><strong>Pages</strong>を開く</li>
+            <li><strong>Build and deployment</strong>を確認する</li>
+            <li><strong>Source</strong>を<strong>GitHub Actions</strong>にする</li>
+          </ol>
+
+          <p>
+            これで、GitHub ActionsからGitHub Pagesへ
+            デプロイできるようになります。
+          </p>
+
+          <aside class="note">
+            <strong>Organizationのリポジトリでも利用できます</strong>
+
+            <p>
+              GitHub PagesはOrganization配下のリポジトリでも利用できます。
+              ただし、Organization側の設定によってPagesの利用が制限されている場合があります。
+            </p>
+          </aside>
+        </section>
+
+        <section id="workflow">
+          <h2>8.4 Workflowを作る</h2>
+
+          <p>
+            GitHub Actionsの設定ファイルを作ります。
+          </p>
+
+          <pre><code>.github/
+└── workflows/
+    └── deploy.yml</code></pre>
+
+          <p>
+            <code>.github/workflows/deploy.yml</code>
+            を次のようにします。
+          </p>
+
+          <pre><code>name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5</code></pre>
+
+          <p>
+            このWorkflowでは、main branchへpushされるたびに
+            次の処理が自動で実行されます。
+          </p>
+
+          <ol>
+            <li>リポジトリを取得する</li>
+            <li>Node.jsを準備する</li>
+            <li><code>npm ci</code>でパッケージをインストールする</li>
+            <li><code>npm run build</code>を実行する</li>
+            <li><code>dist/</code>をGitHub Pages用にアップロードする</li>
+            <li>GitHub Pagesへデプロイする</li>
+          </ol>
+
+          <h3><code>npm ci</code>とは</h3>
+
+          <p>
+            ローカルでは
+            <code>npm install</code>
+            を使いましたが、CIでは
+            <code>npm ci</code>
+            を使っています。
+          </p>
+
+          <p>
+            <code>package-lock.json</code>
+            に記録された内容を使って、
+            再現性の高い形でパッケージをインストールするためのコマンドです。
+          </p>
+
+          <p>
+            詳しい違いを今覚える必要はありません。
+            GitHub ActionsなどのCI環境では
+            <code>npm ci</code>
+            を使う、くらいに考えておけば十分です。
+          </p>
+        </section>
+
+        <section id="deploy">
+          <h2>8.5 デプロイする</h2>
+
+          <p>
+            Workflowを追加したらcommitしてGitHubへpushします。
+          </p>
+
+          <pre><code>git add .
+git commit -m "ci: deploy site to GitHub Pages"
+git push</code></pre>
+
+          <p>
+            GitHubのリポジトリページで
+            <strong>Actions</strong>を開くと、
+            Workflowの実行状況を確認できます。
+          </p>
+
+          <pre><code>Checkout
+   ↓
+Setup Node.js
+   ↓
+Install dependencies
+   ↓
+Build
+   ↓
+Upload artifact
+   ↓
+Deploy to GitHub Pages</code></pre>
+
+          <p>
+            すべて成功すれば、GitHub PagesのURLから
+            Webサイトへアクセスできるようになります。
+          </p>
+
+          <p>
+            以降はmain branchへ変更をpushするたびに、
+            同じWorkflowが実行され、公開サイトも更新されます。
+          </p>
+        </section>
+
+        <section id="trouble">
+          <h2>8.6 うまくいかない場合</h2>
+
+          <h3>まずローカルでbuildする</h3>
+
+          <p>
+            ActionsでBuildが失敗した場合は、
+            まずローカルで同じコマンドを実行します。
+          </p>
+
+          <pre><code>npm run build</code></pre>
+
+          <p>
+            TypeScriptのエラーや、
+            存在しないファイルへの参照などがあると
+            buildに失敗します。
+          </p>
+
+          <h3>Pagesが有効になっていない</h3>
+
+          <p>
+            次のようなエラーが表示される場合があります。
+          </p>
+
+          <pre><code>Get Pages site failed.
+Please verify that the repository has Pages enabled
+and configured to build using GitHub Actions.</code></pre>
+
+          <p>
+            この場合は、
+            GitHubの
+            <strong>Settings → Pages</strong>
+            を開き、
+            Sourceが
+            <strong>GitHub Actions</strong>
+            になっているか確認してください。
+          </p>
+
+          <h3>ページは開くがCSSやJavaScriptが読み込まれない</h3>
+
+          <p>
+            GitHub Pages上だけ表示が崩れる場合は、
+            <code>vite.config.ts</code> の
+            <code>base</code> を確認してください。
+          </p>
+
+          <pre><code>export default defineConfig({
+  base: "/&lt;repository-name&gt;/",
+});</code></pre>
+
+          <h3>GitHub Actionsだけ失敗する</h3>
+
+          <p>
+            ローカルでは普段開いていないページでも、
+            production buildではすべてのエントリが処理されます。
+          </p>
+
+          <p>
+            削除済みのTypeScriptファイルやCSSを
+            古いHTMLがまだ参照していないか確認してください。
+          </p>
+
+          <pre><code>rg '削除したファイル名' .</code></pre>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
-          <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
+          <a href="../git/">
+            ← 前へ：7. Git / GitHubを使う
+          </a>
 
-          <a class="next" href="../web/"> 次へ：4. Webページを編集する → </a>
+          <a class="next" href="../advanced/">
+            次へ：9. 発展・参考資料 →
+          </a>
         </nav>
       </main>
     </div>
