@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="/src/styles/common.css" />
     <link rel="stylesheet" href="/src/styles/docs.css" />
-    <title>プロジェクトを作る | Summer 2026 Game</title>
+
+    <title>発展・参考資料 | Summer 2026 Game</title>
   </head>
 
   <body>
@@ -22,25 +24,474 @@
         <nav class="docs-nav" aria-label="Documentation navigation">
           <a href="../">1. はじめに</a>
           <a href="../environment/">2. 開発環境を準備する</a>
-          <a class="active" href="./">3. プロジェクトを作る</a>
+          <a href="../project/">3. プロジェクトを作る</a>
           <a href="../web/">4. Webページを編集する</a>
           <a href="../p5js/">5. p5.jsを使う</a>
           <a href="../sample-game/">6. サンプルゲームを読む</a>
           <a href="../git/">7. Git / GitHubを使う</a>
           <a href="../deploy/">8. GitHub Pagesで公開する</a>
-          <a href="../advanced/">9. 発展・参考資料</a>
+
+          <a class="active" href="./">9. 発展・参考資料</a>
+
+          <div class="docs-subnav">
+            <a href="#design">9.1 Webページのデザイン</a>
+            <a href="#p5js">9.2 p5.jsをさらに使う</a>
+            <a href="#environment">9.3 開発環境を便利にする</a>
+            <a href="#references">9.4 参考資料</a>
+          </div>
         </nav>
       </aside>
 
       <main class="docs-content">
-        <h1>3. プロジェクトを作る</h1>
+        <h1>9. 発展・参考資料</h1>
 
-        <p>TODO</p>
+        <p>
+          ここまでで、p5.jsとTypeScriptを使ったゲームの作成から、
+          GitHub Pagesでの公開まで一通り行えるようになりました。
+        </p>
+
+        <p>
+          この章では、さらにゲームやWebページを発展させたい場合の
+          選択肢と参考資料を紹介します。
+        </p>
+
+        <aside class="note">
+          <strong>全部使う必要はありません</strong>
+
+          <p>
+            ここで紹介するものは、ゲーム制作に必須ではありません。
+            自分が作りたいものに必要になったときに、
+            興味のあるものから調べてみてください。
+          </p>
+        </aside>
+
+        <section id="design">
+          <h2>9.1 Webページのデザイン</h2>
+
+          <p>
+            ゲームそのものだけでなく、
+            ゲームを公開するWebページのデザインも自由に変更できます。
+          </p>
+
+          <h3>CSSを使う</h3>
+
+          <p>
+            このサイト自体も、基本的にはHTMLとCSSだけで
+            レイアウトやデザインを作っています。
+          </p>
+
+          <p>
+            例えば、次のようなCSSの機能を調べてみると、
+            かなり自由にページを作れるようになります。
+          </p>
+
+          <ul>
+            <li>Flexbox</li>
+            <li>CSS Grid</li>
+            <li>レスポンシブデザイン</li>
+            <li>CSS Custom Properties（CSS変数）</li>
+            <li>transition / animation</li>
+          </ul>
+
+          <p>
+            このドキュメントのサイドバーも、
+            CSS Gridを使って本文と横に並べています。
+          </p>
+
+          <h3>Bootstrapを使う</h3>
+
+          <p>
+            CSSをすべて自分で書く代わりに、
+            <strong>Bootstrap</strong>のような
+            CSSフレームワークを利用する方法もあります。
+          </p>
+
+          <p>
+            Bootstrapには、ボタン、カード、ナビゲーション、
+            グリッドレイアウトなどのスタイルがあらかじめ用意されています。
+          </p>
+
+          <p>例えば、通常のHTMLで</p>
+
+          <pre><code>&lt;button&gt;Restart&lt;/button&gt;</code></pre>
+
+          <p>
+            と書く代わりに、Bootstrapを導入したページでは
+            次のようなclassを利用できます。
+          </p>
+
+          <pre><code>&lt;button class="btn btn-primary"&gt;
+  Restart
+&lt;/button&gt;</code></pre>
+
+          <p>
+            <code>btn</code> や
+            <code>btn-primary</code> に対応するスタイルが
+            Bootstrap側で用意されています。
+          </p>
+
+          <p>
+            ゲーム画面の周りにナビゲーションや説明、
+            スコア表示などを作り込みたい場合に便利です。
+          </p>
+
+          <p>
+            <a
+              href="https://getbootstrap.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Bootstrap
+            </a>
+          </p>
+
+          <aside class="note">
+            <strong>まずは素のHTML / CSSでも十分です</strong>
+
+            <p>
+              Bootstrapを使う必要があるわけではありません。
+              小さなWebページであれば、
+              HTMLとCSSだけで作った方が構造を理解しやすいこともあります。
+            </p>
+          </aside>
+        </section>
+
+        <section id="p5js">
+          <h2>9.2 p5.jsをさらに使う</h2>
+
+          <p>
+            サンプルゲームでは、
+            円や文字などのシンプルな描画だけを使用しました。
+          </p>
+
+          <p>
+            p5.jsには、さらにさまざまな機能があります。
+          </p>
+
+          <h3>画像を使う</h3>
+
+          <p>
+            図形の代わりに画像を使うと、
+            プレイヤーや敵の見た目を自由に作れます。
+          </p>
+
+          <pre><code>let playerImage: p5.Image;
+
+p.preload = () =&gt; {
+  playerImage = p.loadImage("player.png");
+};
+
+p.draw = () =&gt; {
+  p.image(playerImage, x, y);
+};</code></pre>
+
+          <h3>音を使う</h3>
+
+          <p>
+            効果音やBGMを追加すると、
+            ゲームの印象を大きく変えることができます。
+          </p>
+
+          <p>
+            音声を扱いたい場合は、
+            p5.jsのSound関連の機能について調べてみてください。
+          </p>
+
+          <h3><code>p5.Vector</code></h3>
+
+          <p>
+            今回はx方向とy方向を別々の変数で管理しましたが、
+            位置や速度をベクトルとして扱う方法もあります。
+          </p>
+
+          <pre><code>const position = p.createVector(320, 240);
+const velocity = p.createVector(100, 0);
+
+position.add(velocity);</code></pre>
+
+          <p>
+            移動方向や速度を多く扱うゲームでは便利です。
+          </p>
+
+          <h3>アニメーション</h3>
+
+          <p>
+            複数の画像を切り替えたり、
+            図形の大きさや色を時間とともに変化させたりすると、
+            キャラクターやエフェクトをアニメーションさせられます。
+          </p>
+
+          <h3>WebGL</h3>
+
+          <p>
+            p5.jsでは2D描画だけでなく、
+            WebGLを利用した3D描画も可能です。
+          </p>
+
+          <pre><code>p.createCanvas(640, 480, p.WEBGL);</code></pre>
+
+          <p>
+            ただし3Dでは、カメラ、座標系、光源など
+            2Dとは異なる知識も必要になります。
+            最初から無理に使う必要はありません。
+          </p>
+
+          <p>
+            詳しい機能については公式Referenceを参照してください。
+          </p>
+
+          <p>
+            <a
+              href="https://p5js.org/reference/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              p5.js Reference
+            </a>
+          </p>
+        </section>
+
+        <section id="environment">
+          <h2>9.3 開発環境を便利にする</h2>
+
+          <p>
+            これまでのチュートリアルでは、
+            できるだけ標準的でシンプルな開発環境を使いました。
+          </p>
+
+          <p>
+            開発に慣れてきたら、
+            自分が使いやすいように環境をカスタマイズすることもできます。
+          </p>
+
+          <h3>Shellを変更する</h3>
+
+          <p>
+            WSLでは標準のbash以外にも、
+            さまざまなShellを利用できます。
+          </p>
+
+          <ul>
+            <li>
+              <a
+                href="https://www.zsh.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                zsh
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="https://fishshell.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                fish
+              </a>
+            </li>
+          </ul>
+
+          <p>
+            補完や履歴検索など、
+            ターミナル操作を便利にする機能を利用できます。
+          </p>
+
+          <h3>プロンプトを変更する</h3>
+
+          <p>
+            <strong>Starship</strong>などを使うと、
+            現在のGit branchやNode.jsのバージョンなどを
+            ターミナル上に表示できます。
+          </p>
+
+          <p>
+            <a
+              href="https://starship.rs/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Starship
+            </a>
+          </p>
+
+          <h3>VS Codeをカスタマイズする</h3>
+
+          <p>
+            VS Codeにも多数の拡張機能があります。
+          </p>
+
+          <p>
+            例えば、コードの整形、Git操作、
+            カラーテーマなどを自分の好みに合わせて変更できます。
+          </p>
+
+          <p>
+            ただし、拡張機能を大量に入れる必要はありません。
+            「この操作をもっと便利にしたい」と思ったときに
+            探してみるのがおすすめです。
+          </p>
+        </section>
+
+        <section id="references">
+          <h2>9.4 参考資料</h2>
+
+          <p>
+            このチュートリアルでは、
+            開発を始めるために必要な内容だけを扱っています。
+          </p>
+
+          <p>
+            より詳しく知りたい場合は、
+            次の資料を参照してください。
+          </p>
+
+          <h3>HTML / CSS / JavaScript</h3>
+
+          <ul>
+            <li>
+              <a
+                href="https://developer.mozilla.org/ja/docs/Learn_web_development"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MDN - ウェブ開発を学ぶ
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="https://jsprimer.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                JavaScript Primer
+              </a>
+            </li>
+          </ul>
+
+          <h3>TypeScript</h3>
+
+          <ul>
+            <li>
+              <a
+                href="https://typescriptbook.jp/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                サバイバルTypeScript
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="https://www.typescriptlang.org/docs/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TypeScript Documentation
+              </a>
+            </li>
+          </ul>
+
+          <h3>p5.js</h3>
+
+          <ul>
+            <li>
+              <a
+                href="https://p5js.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                p5.js
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="https://p5js.org/reference/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                p5.js Reference
+              </a>
+            </li>
+          </ul>
+
+          <h3>Vite</h3>
+
+          <ul>
+            <li>
+              <a
+                href="https://ja.vite.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Vite 日本語ドキュメント
+              </a>
+            </li>
+          </ul>
+
+          <h3>Git / GitHub</h3>
+
+          <ul>
+            <li>
+              <a
+                href="https://git-scm.com/book/ja/v2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Pro Git 日本語版
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="https://docs.github.com/ja"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub Docs
+              </a>
+            </li>
+          </ul>
+
+          <h3>Webデザイン</h3>
+
+          <ul>
+            <li>
+              <a
+                href="https://developer.mozilla.org/ja/docs/Learn_web_development/Core/CSS_layout"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MDN - CSSレイアウト
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="https://getbootstrap.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Bootstrap
+              </a>
+            </li>
+          </ul>
+
+          <p>
+            分からないことが出てきたときは、
+            まず公式ドキュメントやReferenceを確認する習慣を付けておくと、
+            今後ほかのライブラリやツールを使う場合にも役立ちます。
+          </p>
+        </section>
 
         <nav class="docs-page-nav" aria-label="Page navigation">
-          <a href="../environment/"> ← 前へ：2. 開発環境を準備する </a>
-
-          <a class="next" href="../web/"> 次へ：4. Webページを編集する → </a>
+          <a href="../deploy/">
+            ← 前へ：8. GitHub Pagesで公開する
+          </a>
         </nav>
       </main>
     </div>
